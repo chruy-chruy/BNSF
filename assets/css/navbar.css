@@ -1,45 +1,53 @@
-
-/* Sidebar Styles */
+/* Sidebar style */
 .sidebar {
-    width: 250px; /* Width of the sidebar */
-    height: 100vh; /* Full height of the viewport */
-    background-color: #333; /* Sidebar background color */
-    color: white; /* Text color */
-    padding: 20px; /* Padding around the content */
-    overflow: hidden; /* Prevents scrolling */
-}
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #343a40;
+    color: white;
+    padding-top: 20px;
+    transition: width 0.3s;
+  }
 
-.sidebar h2 {
-    text-align: center; /* Center the title */
-    margin-bottom: 20px; /* Spacing below the title */
-}
+  .sidebar a {
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+  }
 
-.sidebar-menu {
-    list-style-type: none; /* Removes default list styles */
-    padding: 0; /* Removes default padding */
-}
+  .sidebar a:hover {
+    background-color: #007bff;
+    color: white;
+  }
 
-.sidebar-menu li {
-    margin: 15px 0; /* Spacing between items */
-}
+  .sidebar a.active {
+    background-color: #007bff;
+    color: white;
+  }
 
-.sidebar-menu a {
-    color: white; /* Link text color */
-    text-decoration: none; /* Remove underline */
-    padding: 10px; /* Padding for clickable area */
-    display: block; /* Makes the entire area clickable */
-    transition: background-color 0.3s; /* Smooth background color transition */
-}
 
-.sidebar-menu a:hover {
-    background-color: #555; /* Change background on hover */
-}
+  .sidebar-collapsed {
+    width: 80px;
+  }
 
-/* Main Content */
-.main-content {
-    flex: 1; /* Allow the main content to fill the remaining space */
-    padding: 20px; /* Padding for the main content */
-    overflow-y: auto; /* Allow vertical scrolling */
-    height: 100vh; /* Set height to full viewport */
-    box-sizing: border-box; /* Include padding in height calculation */
+  .content {
+    margin-left: 250px;
+    padding: 20px;
+  }
+
+  .collapsed .content {
+    margin-left: 80px;
+  }
+
+  .logo{
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 65px;
+    width: 120px;
 }

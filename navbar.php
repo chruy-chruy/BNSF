@@ -1,27 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Management System</title>
-    <link rel="stylesheet" href="../../assets/css/navbar.css">
-</head>
-<body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>School Management System</h2>
-        <ul class="sidebar-menu">
-            <li><a href="dashboard.php">Dashboard</a></li>
-            <li><a href="teachers.php">Teacher</a></li>
-            <li><a href="students.php">Student</a></li>
-            <li><a href="subjects.php">Subject</a></li>
-            <li><a href="sections.php">Section</a></li>
-            <li><a href="users.php">User</a></li>
-        </ul>
+<div class="sidebar" id="sidebar">
+    <div>
+      <img src="../../assets/img/logo.png" alt="Logo" class="logo">
     </div>
-
-    <div class="main-content">
-        <!-- Your main content goes here -->
-    </div>
-</body>
-</html>
+    <h4 class="text-center">BNSF</h4>
+    <a href="../dashboard" class="<?php if ($page == 'Dashboard') {echo 'active';} ?>" >Dashboard</a>
+    <a href="../Student" class="<?php if ($page == 'Student') {echo 'active';} ?>">Students</a>
+    <a href="../teacher" class="<?php if ($page == 'Teacher') {echo 'active';} ?>">Teachers</a>
+    <a href="../subject" class="<?php if ($page == 'Subject') {echo 'active';} ?>">Subject</a>
+    <a href="../section" class="<?php if ($page == 'Section') {echo 'active';} ?>">Section</a>
+    <a href="../schedule" class="<?php if ($page == 'Schedule') {echo 'active';} ?>">Schedule</a>
+    <a href="../grades" class="<?php if ($page == 'Grades') {echo 'active';} ?>">Grades</a>
+    <a href="../../logout.php">Logout</a>
+  </div>
