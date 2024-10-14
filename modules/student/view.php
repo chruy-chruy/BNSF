@@ -90,12 +90,45 @@ if (isset($_GET['id'])) {
       <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $student['contact_number']; ?>" required>
     </div>
 
+        
+
+
     <!-- Email -->
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
       <input type="email" class="form-control" id="email" name="email" value="<?php echo $student['email']; ?>" required>
     </div>
 
+    <!-- Grade Level -->
+    <div class="mb-3">
+                <label for="grade_level" class="form-label">Grade Level</label>
+                <select class="form-select" id="grade_level" name="grade_level" required>
+                  <option value="" >Select</option>
+                  <option value="11"  <?php echo ($student['grade_level'] == '11') ? 'selected' : ''; ?>>11</option>
+                  <option value="12"  <?php echo ($student['grade_level'] == '12') ? 'selected' : ''; ?>>12</option>
+                </select>
+              </div>
+
+<!-- Strand -->
+<div class="mb-3">
+  <label for="strand" class="form-label">Strand</label>
+  <select class="form-select" id="strand" name="strand" required>
+    <option value="">Select</option>
+    <option value="STEM" <?php echo ($student['strand'] == 'STEM') ? 'selected' : ''; ?>>STEM</option>
+    <option value="HUMMS" <?php echo ($student['strand'] == 'HUMMS') ? 'selected' : ''; ?>>HUMMS</option>
+    <option value="ABM" <?php echo ($student['strand'] == 'ABM') ? 'selected' : ''; ?>>ABM</option>
+    <option value="GAS" <?php echo ($student['strand'] == 'GAS') ? 'selected' : ''; ?>>GAS</option>
+  </select>
+</div>
+
+
+    <!-- Section -->
+    <div class="mb-3">
+      <label for="section" class="form-label">Section</label>
+      <input type="text" class="form-control" id="section" name="section" value="<?php echo $student['section']; ?>" required>
+    </div>
+
+    
     <!-- Username -->
     <div class="mb-3">
       <label for="username" class="form-label">Username</label>
@@ -107,6 +140,7 @@ if (isset($_GET['id'])) {
       <label for="password" class="form-label">Password</label>
       <input type="text" class="form-control" id="password" name="password" value="<?php echo $student['password']; ?>" required>
     </div>
+
 
     <div class="text-center">
       <button type="submit" class="btn btn-primary">Save Changes</button>
