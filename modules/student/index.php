@@ -1,4 +1,14 @@
-<!DOCTYPE html>
+<?php
+// Check if a message or error exists in the URL parameters
+if (isset($_GET['message'])) {
+    $message = $_GET['message'];
+    $alertType = 'success'; // Set default alert type to 'success'
+} elseif (isset($_GET['error'])) {
+    $message = $_GET['error'];
+    $alertType = 'danger'; // Set alert type to 'danger' for errors
+}
+?>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -10,7 +20,7 @@
   <!-- DataTables CSS -->
   <link rel="stylesheet" href="../../assets/css/DataTables/jquery.dataTables.min.css">
   <!-- Custom Style -->
-  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
 </head>
 <body>
 
@@ -31,12 +41,47 @@ include "../../db_conn.php";
     <p>Manage the list of students here.</p>
 
     <!-- Add Student Button -->
-    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add Student</button>
+<a href="add.php" class="btn btn-success mb-3">Add Student</a>
+<div class="container mt-4">
+
+<?php if (isset($message)): ?>
+<!-- Bootstrap 5 Alert -->
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+    <?php echo $message; ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>
+
+</div>
+
+<!-- Auto-dismiss alert after 3 seconds using simple JavaScript -->
+<script>
+// Select the alert element
+var alert = document.getElementById('autoDismissAlert');
+
+// Set timeout for 3 seconds (3000 ms)
+if (alert) {
+    setTimeout(function() {
+        // Fade out the alert (optional smooth fade out)
+        alert.style.transition = 'opacity 0.5s ease';
+        alert.style.opacity = '0';
+
+        // After fading out, remove the alert element from the DOM
+        setTimeout(function() {
+            alert.remove();
+        }, 500); // Remove after fade-out completes (500 ms)
+    }, 3000); // 3 seconds delay
+}
+</script>
 
     <!-- Student Table with DataTable -->
     <?php
     // Query to fetch student data
-    $query = "SELECT id, first_name, middle_name, last_name, sex, grade_level, strand, section FROM student WHERE del_status != 'deleted'";
+    $query = "SELECT s.*, CONCAT(t.name) AS strand_name 
+    FROM student s 
+    LEFT JOIN strand t ON s.strand = t.id 
+    WHERE s.del_status != 'deleted'
+    ORDER BY s.id DESC;";
     $result = mysqli_query($conn, $query);
     ?>
 
@@ -45,10 +90,9 @@ include "../../db_conn.php";
         <tr>
           <th>ID</th>
           <th>Full Name</th>
-          <th>Sex</th>
-          <th>Grade Level</th>
+          <th>Gender</th>
+          <th>Email</th>
           <th>Strand</th>
-          <th>Section</th>
           <th class="text-end">Actions</th>
         </tr>
       </thead>
@@ -58,18 +102,16 @@ include "../../db_conn.php";
         while($row = mysqli_fetch_assoc($result)) {
             $id = $row['id'];
             $full_name = $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name'];
-            $sex = $row['sex'];
-            $grade_level = $row['grade_level'];
-            $strand = $row['strand'];
-            $section = $row['section'];
+            $gender = $row['gender'];
+            $Email = $row['email'];
+            $strand = $row['strand_name'];
         ?>
         <tr>
           <td><?php echo $id; ?></td>
           <td><?php echo $full_name; ?></td>
-          <td><?php echo $sex; ?></td>
-          <td><?php echo $grade_level; ?></td>
+          <td><?php echo $gender; ?></td>
+          <td><?php echo $Email; ?></td>
           <td><?php echo $strand; ?></td>
-          <td><?php echo $section; ?></td>
           <td class="text-end">
             <a href="view.php?id=<?php echo $id; ?>" class="btn btn-info btn-sm">View</a>
           </td>
@@ -83,151 +125,9 @@ include "../../db_conn.php";
     mysqli_close($conn);
     ?>
   </div>
-
- <!-- Add Student Modal -->
- <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addStudentModalLabel">Add New Student</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form action="create.php" method="POST">
-              <!-- First Name -->
-              <div class="mb-3">
-                <label for="first_name" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" required>
-              </div>
-              
-              <!-- Middle Name -->
-              <div class="mb-3">
-                <label for="middle_name" class="form-label">Middle Name</label>
-                <input type="text" class="form-control" id="middle_name" name="middle_name">
-              </div>
-              
-              <!-- Last Name -->
-              <div class="mb-3">
-                <label for="last_name" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" required>
-              </div>
-
-              <!-- Sex -->
-              <div class="mb-3">
-                <label for="sex" class="form-label">Sex</label>
-                <select class="form-select" id="sex" name="sex" required>
-                  <option value="">Select</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-              </div>
-              
-              <!-- Address -->
-              <div class="mb-3">
-                <label for="address" class="form-label">Address</label>
-                <input type="text" class="form-control" id="address" name="address" required>
-              </div>
-
-              <!-- Contact Number -->
-              <div class="mb-3">
-                <label for="contact_number" class="form-label">Contact Number</label>
-                <input type="text" class="form-control" id="contact_number" name="contact_number" required>
-              </div>
-              
-              <!-- Email -->
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required oninput="generateUsername()">
-              </div>
-              
-              <!-- Grade Level -->
-              <div class="mb-3">
-                <label for="grade_level" class="form-label">Grade Level</label>
-                <select class="form-select" id="grade_level" name="grade_level" required>
-                  <option value="">Select</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                </select>
-              </div>
-
-              <!-- Strand -->
-              <div class="mb-3">
-                <label for="strand" class="form-label">Strand</label>
-                <select class="form-select" id="strand" name="strand" required>
-                  <option value="">Select</option>
-                  <option value="STEM">STEM</option>
-                  <option value="HUMMS">HUMMS</option>
-                  <option value="ABM">ABM</option>
-                  <option value="GAS">GAS</option>
-                </select>
-              </div>
-
-              <!-- Section -->
-              <div class="mb-3">
-                <label for="section" class="form-label">Section</label>
-                <input type="text" class="form-control" id="section" name="section" required>
-              </div>
-
-              <!-- Username (Auto-generated based on email) -->
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" readonly required>
-              </div>
-              
-              <!-- Password (Auto-generated based on full name) -->
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="text" class="form-control" id="password" name="password" readonly required>
-              </div>
-
-              <!-- Submit Button -->
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Add Student</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
-  <!-- Bootstrap 5 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Auto-generate username based on email
-    document.getElementById('email').addEventListener('input', function() {
-      const emailValue = this.value;
-      document.getElementById('username').value = emailValue; // Set username as the email
-    });
 
-    // Auto-generate password based on full name (first + last name) and add 3 random digits
-    document.getElementById('first_name').addEventListener('input', generatePassword);
-    document.getElementById('last_name').addEventListener('input', generatePassword);
-
-    function generatePassword() {
-      const firstName = document.getElementById('first_name').value;
-      const lastName = document.getElementById('last_name').value;
-      if (firstName && lastName) {
-        const randomNumbers = Math.floor(100 + Math.random() * 900); // Generate 3 random digits
-        const password = firstName.toLowerCase() + lastName.toLowerCase() + randomNumbers;
-        document.getElementById('password').value = password; // Set password as first + last name + 3 random digits
-      }
-    }
-
-    // Toggle password visibility
-    document.getElementById('togglePassword').addEventListener('click', function() {
-      const passwordField = document.getElementById('password');
-      if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        this.textContent = 'Hide';
-      } else {
-        passwordField.type = 'password';
-        this.textContent = 'Show';
-      }
-    });
-  </script>
 <script src="../../assets/js/DataTables/jquery.min.js"></script>
 <script src="../../assets/js/DataTables/jquery.dataTables.min.js"></script>
 <script src="../../assets/js/DataTables/dataTables.bootstrap5.min.js"></script>

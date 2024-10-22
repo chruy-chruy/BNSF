@@ -1,3 +1,13 @@
+<?php
+// Check if a message or error exists in the URL parameters
+if (isset($_GET['message'])) {
+    $message = $_GET['message'];
+    $alertType = 'success'; // Set default alert type to 'success'
+} elseif (isset($_GET['error'])) {
+    $message = $_GET['error'];
+    $alertType = 'danger'; // Set alert type to 'danger' for errors
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +20,7 @@
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
-  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
 </head>
 <body>
 <?php 
@@ -22,7 +32,12 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // Fetch the student data based on ID
-    $query = "SELECT * FROM student WHERE id = '$id' AND del_status != 'deleted'";
+    $query = "SELECT s.*, CONCAT(t.name) AS strand_name 
+    FROM student s 
+    LEFT JOIN strand t ON s.strand = t.id 
+    WHERE s.del_status != 'deleted' AND s.id = '$id'
+    ORDER BY s.id DESC;";
+
     $result = mysqli_query($conn, $query);
     $student = mysqli_fetch_assoc($result);
 
@@ -35,6 +50,9 @@ if (isset($_GET['id'])) {
     header("Location: index.php?error=No student ID specified.");
     exit();
 }
+
+$strand_query = mysqli_query($conn, "SELECT * FROM strand WHERE del_status != 'deleted'");
+
 ?>
 
 <!-- Sidebar -->
@@ -42,116 +60,215 @@ if (isset($_GET['id'])) {
 
 <!-- Main Content -->
 <div class="content" id="content">
+<div class="container mt-4">
 
-<div id="studentSection">
-  <h1>View Student</h1>
+<?php if (isset($message)): ?>
+<!-- Bootstrap 5 Alert -->
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+    <?php echo $message; ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>
 
-  <!-- Back Button -->
-  <div class="d-flex justify-content-end mb-3">
-    <a href="index.php" class="btn btn-secondary">
-      <i class="bi bi-arrow-left"></i> Back
-    </a>
-  </div>
-
-  <form action="update.php" method="POST">
-    <input type="hidden" name="id" value="<?php echo $student['id']; ?>">
-
-    <!-- First Name -->
-    <div class="mb-3">
-      <label for="first_name" class="form-label">First Name</label>
-      <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $student['first_name']; ?>" required>
-    </div>
-
-    <!-- Middle Name -->
-    <div class="mb-3">
-      <label for="middle_name" class="form-label">Middle Name</label>
-      <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo $student['middle_name']; ?>">
-    </div>
-
-    <!-- Last Name -->
-    <div class="mb-3">
-      <label for="last_name" class="form-label">Last Name</label>
-      <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $student['last_name']; ?>" required>
-    </div>
-
-    <!-- Sex -->
-    <div class="mb-3">
-      <label for="sex" class="form-label">Sex</label>
-      <select class="form-select" id="sex" name="sex" required>
-        <option value="">Select</option>
-        <option value="Male" <?php echo ($student['sex'] == 'Male') ? 'selected' : ''; ?>>Male</option>
-        <option value="Female" <?php echo ($student['sex'] == 'Female') ? 'selected' : ''; ?>>Female</option>
-      </select>
-    </div>
-
-    <!-- Contact Number -->
-    <div class="mb-3">
-      <label for="contact_number" class="form-label">Contact Number</label>
-      <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $student['contact_number']; ?>" required>
-    </div>
-
-        
-
-
-    <!-- Email -->
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" value="<?php echo $student['email']; ?>" required>
-    </div>
-
-    <!-- Grade Level -->
-    <div class="mb-3">
-                <label for="grade_level" class="form-label">Grade Level</label>
-                <select class="form-select" id="grade_level" name="grade_level" required>
-                  <option value="" >Select</option>
-                  <option value="11"  <?php echo ($student['grade_level'] == '11') ? 'selected' : ''; ?>>11</option>
-                  <option value="12"  <?php echo ($student['grade_level'] == '12') ? 'selected' : ''; ?>>12</option>
-                </select>
-              </div>
-
-<!-- Strand -->
-<div class="mb-3">
-  <label for="strand" class="form-label">Strand</label>
-  <select class="form-select" id="strand" name="strand" required>
-    <option value="">Select</option>
-    <option value="STEM" <?php echo ($student['strand'] == 'STEM') ? 'selected' : ''; ?>>STEM</option>
-    <option value="HUMMS" <?php echo ($student['strand'] == 'HUMMS') ? 'selected' : ''; ?>>HUMMS</option>
-    <option value="ABM" <?php echo ($student['strand'] == 'ABM') ? 'selected' : ''; ?>>ABM</option>
-    <option value="GAS" <?php echo ($student['strand'] == 'GAS') ? 'selected' : ''; ?>>GAS</option>
-  </select>
 </div>
 
+<!-- Auto-dismiss alert after 3 seconds using simple JavaScript -->
+<script>
+// Select the alert element
+var alert = document.getElementById('autoDismissAlert');
 
-    <!-- Section -->
-    <div class="mb-3">
-      <label for="section" class="form-label">Section</label>
-      <input type="text" class="form-control" id="section" name="section" value="<?php echo $student['section']; ?>" required>
+// Set timeout for 3 seconds (3000 ms)
+if (alert) {
+    setTimeout(function() {
+        // Fade out the alert (optional smooth fade out)
+        alert.style.transition = 'opacity 0.5s ease';
+        alert.style.opacity = '0';
+
+        // After fading out, remove the alert element from the DOM
+        setTimeout(function() {
+            alert.remove();
+        }, 500); // Remove after fade-out completes (500 ms)
+    }, 3000); // 3 seconds delay
+}
+</script>
+
+
+<div class="container my-5">
+  <h1 class="text-center mb-4">View Student</h1>
+<!-- Back Button -->
+  <a href="index.php" class="btn btn-secondary mb-3">
+    <i class="bi bi-arrow-left"></i> Back
+  </a>
+  <form action="update.php?id=<?php echo $student['id']; ?>" method="POST">
+
+    <!-- Personal Information -->
+    <div class="row mb-3">
+      <h3 class="mb-3">Personal Information</h3>
+      <div class="col-md-6">
+        <label for="lrn" class="form-label required">LRN</label>
+        <input type="text" class="form-control" id="lrn" name="lrn" required 
+        value="<?php echo $student['lrn']; ?>">
+      </div>
+      <div class="col-md-6">
+        <label for="last_name" class="form-label required">Last Name</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" required
+        value="<?php echo $student['last_name']; ?>">
+      </div>
     </div>
 
-    
-    <!-- Username -->
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" id="username" name="username" value="<?php echo $student['username']; ?>" readonly required>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="middle_name" class="form-label">Middle Name</label>
+        <input type="text" class="form-control" id="middle_name" name="middle_name"
+        value="<?php echo $student['middle_name']; ?>">
+      </div>
+      <div class="col-md-6">
+        <label for="first_name" class="form-label required">First Name</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" required
+        value="<?php echo $student['first_name']; ?>">
+      </div>
     </div>
 
-    <!-- Password (Editable) -->
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="text" class="form-control" id="password" name="password" value="<?php echo $student['password']; ?>" required>
+    <!-- Strand and Gender -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="strand" class="form-label required">Strand</label>
+        <select class="form-select" id="strand" name="strand" required>
+          <option hidden value="<?php echo $student['strand']; ?>"><?php echo $student['strand_name']; ?></option>
+          <?php while($strand = mysqli_fetch_assoc($strand_query)): ?>
+                            <option value="<?php echo $strand['id']; ?>">               
+                              <?php echo $strand['name']; ?>     
+                            </option>
+                        <?php endwhile; ?>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="gender" class="form-label required">Gender</label>
+        <select class="form-select" id="gender" name="gender" required>
+          <option hidden value="<?php echo $student['gender']; ?>"><?php echo $student['gender']; ?></option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
     </div>
 
+    <!-- Age, Nationality, and Birthday -->
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="age" class="form-label required">Age</label>
+        <input type="number" class="form-control" id="age" name="age" required
+        value="<?php echo $student['age']; ?>">
+      </div>
+      <div class="col-md-4">
+        <label for="nationality" class="form-label required">Nationality</label>
+        <input type="text" class="form-control" id="nationality" name="nationality" required
+        value="<?php echo $student['nationality']; ?>">
+      </div>
+      <div class="col-md-4">
+        <label for="birthday" class="form-label required">Birthday</label>
+        <input type="date" class="form-control" id="birthday" name="birthday" required
+        value="<?php echo $student['birthday']; ?>">
+      </div>
+    </div>
 
+    <!-- Address -->
+    <div class="mb-3">
+      <label for="address" class="form-label required">Address</label>
+      <input type="text" class="form-control" id="address" name="address" required
+      value="<?php echo $student['address']; ?>">
+    </div>
+
+    <!-- Contact and Email -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="contact" class="form-label required">Contact</label>
+        <input type="text" class="form-control" id="contact" name="contact" required
+        value="<?php echo $student['contact']; ?>">
+      </div>
+      <div class="col-md-6">
+        <label for="email" class="form-label required">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required
+        value="<?php echo $student['email']; ?>">
+      </div>
+    </div>
+
+    <!-- Parent Information -->
+    <h3 class="mb-3">Parent Information</h3>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="mothers_name" class="form-label required">Mother's Name</label>
+        <input type="text" class="form-control" id="mothers_name" name="mothers_name" required
+        value="<?php echo $student['mothers_name']; ?>">
+      </div>
+      <div class="col-md-6">
+        <label for="mothers_occupation" class="form-label">Mother's Occupation</label>
+        <input type="text" class="form-control" id="mothers_occupation" name="mothers_occupation"
+        value="<?php echo $student['mothers_occupation']; ?>">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="fathers_name" class="form-label required">Father's Name</label>
+        <input type="text" class="form-control" id="fathers_name" name="fathers_name" required
+        value="<?php echo $student['fathers_name']; ?>">
+      </div>
+      <div class="col-md-6">
+        <label for="fathers_occupation" class="form-label">Father's Occupation</label>
+        <input type="text" class="form-control" id="fathers_occupation" name="fathers_occupation"
+        value="<?php echo $student['fathers_occupation']; ?>">
+      </div>
+    </div>
+
+    <h3 class="mb-3">User Information</h3>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="username" class="form-label required">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required readonly
+            value="<?php echo $student['username']; ?>">
+          </div>
+          <div class="col-md-6">
+            <label for="password" class="form-label required">Password</label>
+            <input type="text" class="form-control" id="password" name="password" readonly
+            value="<?php echo $student['password']; ?>">
+          </div>
+        </div>
+
+    <!-- Submit and Delete Buttons -->
     <div class="text-center">
-      <button type="submit" class="btn btn-primary">Save Changes</button>
-      <a href="delete.php?id=<?php echo $student['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this student?');">Delete</a>
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <!-- Delete Button -->
+      <button type="button" class="btn btn-danger" id="deleteButton">
+        <i class="bi bi-trash"></i> Delete
+      </button>
     </div>
   </form>
 </div>
 
-</div>
+<script>
+// Auto-generate username based on email
+document.getElementById('email').addEventListener('input', function() {
+    const emailValue = this.value;
+    document.getElementById('username').value = emailValue; // Set username as the email
+});
+
+// Auto-generate password based on lrn
+document.getElementById('lrn').addEventListener('input', function() {
+    const lrnValue = this.value;
+    document.getElementById('password').value = lrnValue; // Set password as the lrn
+});
+
+
+// Confirm before deleting
+document.getElementById('deleteButton').addEventListener('click', function() {
+    const confirmed = confirm('Are you sure you want to delete this student?');
+    if (confirmed) {
+        window.location.href = 'delete.php?id=<?php echo $student['id']; ?>'; // Redirect to delete page
+    }
+});
+</script>
 
 <!-- Bootstrap 5 JS -->
-<script src="../../assets/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/DataTables/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,48 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bootstrap 5 Sidebar</title>
-  <!-- Bootstrap 5 CSS -->
-  <link rel="stylesheet" href="../../assets/css/navbar.css">
-  <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
-  <!-- style -->
-   <link rel="stylesheet" href="../../assets/css/style.css">
-</head>
-<body>
-
-  <!-- Sidebar -->
-  <?php include "../../navbar.php"; ?>
-
-  <!-- Main Content -->
-   <!-- Main Content (Dashboard) -->
-
-</body>
-</html>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bootstrap 5 Sidebar</title>
+  <title>Dashboard Module</title>
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
   <!-- style -->
-   <link rel="stylesheet" href="../../assets/css/style.css">
+   <link rel="stylesheet" href="../../assets/css/styles.css">
 </head>
 <body>
 <?php 
 $page = 'Dashboard';
 
 include "../../db_conn.php";
+include "../../navbar.php";
+
+//student
+$query = mysqli_query($conn, "SELECT COUNT(id) AS total FROM `student` Where del_status != 'deleted'");
+$row = mysqli_fetch_array($query);
+$total_student = $row['total'];
+
+//teacher
+$query = mysqli_query($conn, "SELECT COUNT(id) AS total FROM `teacher` Where del_status != 'deleted'");
+$row = mysqli_fetch_array($query);
+$total_teacher = $row['total'];
+
+//subject
+$query = mysqli_query($conn, "SELECT COUNT(id) AS total FROM `subject` Where del_status != 'deleted'");
+$row = mysqli_fetch_array($query);
+$total_subject = $row['total'];
+
+//strand
+$query = mysqli_query($conn, "SELECT COUNT(id) AS total FROM `strand` Where del_status != 'deleted'");
+$row = mysqli_fetch_array($query);
+$total_strand = $row['total'];
  ?>
-  <!-- Sidebar -->
-  <?php include "../../navbar.php"; ?>
 
   <!-- Main Content -->
    <!-- Main Content (Dashboard) -->
@@ -58,7 +53,7 @@ include "../../db_conn.php";
         <div class="card text-white bg-primary mb-3">
           <div class="card-body">
             <h5 class="card-title">Students</h5>
-            <p class="card-text">1,230</p>
+            <p class="card-text"><?php echo $total_student; ?></p>
           </div>
         </div>
       </div>
@@ -66,30 +61,30 @@ include "../../db_conn.php";
         <div class="card text-white bg-success mb-3">
           <div class="card-body">
             <h5 class="card-title">Teachers</h5>
-            <p class="card-text">230</p>
+            <p class="card-text"><?php echo $total_teacher; ?></p>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card text-white bg-warning mb-3">
           <div class="card-body">
-            <h5 class="card-title">Classes</h5>
-            <p class="card-text">45</p>
+            <h5 class="card-title">Subjects</h5>
+            <p class="card-text"><?php echo $total_subject; ?></p>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card text-white bg-danger mb-3">
           <div class="card-body">
-            <h5 class="card-title">Pending Issues</h5>
-            <p class="card-text">5</p>
+            <h5 class="card-title">Strand</h5>
+            <p class="card-text"><?php echo $total_strand; ?></p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Chart Placeholder -->
-    <div class="row mb-4">
+    <!-- <div class="row mb-4">
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
@@ -98,10 +93,10 @@ include "../../db_conn.php";
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Table -->
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
@@ -143,7 +138,7 @@ include "../../db_conn.php";
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
   </div>
 

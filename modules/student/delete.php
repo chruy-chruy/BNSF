@@ -10,7 +10,7 @@ if (isset($_GET['id'])) {
 
     if (mysqli_query($conn, $query)) {
         // Redirect with success message
-        header("Location: index.php?success=Student deleted successfully.");
+        header("Location: index.php?message=Student deleted successfully.");
     } else {
         // Redirect with error message
         header("Location: index.php?error=Failed to delete student: " . mysqli_error($conn));

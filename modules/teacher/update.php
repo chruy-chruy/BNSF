@@ -1,62 +1,62 @@
-<?php 
-include "../../db_conn.php";
+<?php
 
-// Check if the form has been submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the teacher ID
-    $id = $_POST['id'];
+include "../../db_conn.php"; // Include the database connection
 
-    // Get the updated teacher data from the form
-    $first_name = ucwords(trim($_POST['first_name']));
-    $middle_name = ucwords(trim($_POST['middle_name']));
-    $last_name = ucwords(trim($_POST['last_name']));
-    $sex = $_POST['sex'];
-    $contact_number = trim($_POST['contact_number']);
-    $email = trim($_POST['email']);
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']); // Ensure you hash this password in a real application
+// Get the teacher ID from the URL
+$id = $_GET['id'];
 
-    // Prepare the SQL update query
-    $query = "UPDATE teacher SET 
-              first_name = '$first_name',
-              middle_name = '$middle_name',
-              last_name = '$last_name',
-              sex = '$sex',
-              contact_number = '$contact_number',
-              email = '$email',
-              username = '$username',
-              password = '$password'
-              WHERE id = '$id'";
+// Retrieve and sanitize form data
+$id_number = mysqli_real_escape_string($conn, $_POST['id_number']);
+$first_name = ucwords(mysqli_real_escape_string($conn, $_POST['first_name']));
+$middle_name = ucwords(mysqli_real_escape_string($conn, $_POST['middle_name']));
+$last_name = ucwords(mysqli_real_escape_string($conn, $_POST['last_name']));
+$gender = mysqli_real_escape_string($conn, $_POST['gender']);
+$age = mysqli_real_escape_string($conn, $_POST['age']);
+$nationality = mysqli_real_escape_string($conn, $_POST['nationality']);
+$birthday = mysqli_real_escape_string($conn, $_POST['birthday']);
+$address = mysqli_real_escape_string($conn, $_POST['address']);
+$contact = mysqli_real_escape_string($conn, $_POST['contact']);
+$email = mysqli_real_escape_string($conn, $_POST['email']);
+$username = mysqli_real_escape_string($conn, $_POST['username']);
+$password = mysqli_real_escape_string($conn, $_POST['password']);
+
+// Check if another teacher with the same ID number or email already exists (excluding the current teacher)
+$squery = mysqli_query($conn, "SELECT * FROM teacher WHERE 
+    (id_number = '$id_number' OR email = '$email') AND 
+    id != '$id' AND 
+    del_status != 'deleted'");
+
+$check = null; // Initialize check variable
+while ($row = mysqli_fetch_array($squery)) {
+    $check = $row['id_number'] . " " . $row['email'];
+}
+
+// Update teacher details if no conflict
+if (empty($check)) {
+    // Prepare SQL update statement
+    $sql2 = "UPDATE `teacher` SET
+        `id_number` = '$id_number',
+        `first_name` = '$first_name',
+        `middle_name` = '$middle_name',
+        `last_name` = '$last_name',
+        `gender` = '$gender',
+        `age` = '$age',
+        `nationality` = '$nationality',
+        `birthday` = '$birthday',
+        `address` = '$address',
+        `contact` = '$contact',
+        `email` = '$email',
+        `username` = '$username',
+        `password` = '$password'
+    WHERE id = '$id'";
 
     // Execute the query
-    if (mysqli_query($conn, $query)) {
-        // Redirect back to the index page with a success message
-        header("Location: index.php?message=Teacher updated successfully.");
-        exit();
+    if (mysqli_query($conn, $sql2)) {
+        header("location:view.php?id=$id&message=Success! Teacher details have been updated successfully.");
     } else {
-        // Redirect back to the view page with an error message
-        header("Location: view.php?id=$id&error=Failed to update teacher. Please try again.");
-        exit();
+        header("location:view.php?id=$id&error=Error! Could not update the teacher details.");
     }
+} else {
+    header("location:view.php?id=$id&error=Error! Another teacher with the same ID number or email already exists.");
 }
-
-// Handle delete request if "delete" button was clicked
-if (isset($_POST['delete'])) {
-    // Prepare the delete query
-    $deleteQuery = "UPDATE teacher SET del_status = 'deleted' WHERE id = '$id'";
-    
-    // Execute the delete query
-    if (mysqli_query($conn, $deleteQuery)) {
-        // Redirect back to the index page with a success message
-        header("Location: index.php?message=Teacher deleted successfully.");
-        exit();
-    } else {
-        // Redirect back to the view page with an error message
-        header("Location: view.php?id=$id&error=Failed to delete teacher. Please try again.");
-        exit();
-    }
-}
-
-// Close the database connection
-mysqli_close($conn);
 ?>

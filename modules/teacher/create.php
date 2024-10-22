@@ -1,59 +1,72 @@
 <?php 
 
-include "../../db_conn.php";
+include "../../db_conn.php"; // Include your database connection
 
-// Retrieve and sanitize form data
-$first_name = ucwords($_POST['first_name']);
-$middle_name = ucwords($_POST['middle_name']);
-$last_name = ucwords($_POST['last_name']);
-$sex = ($_POST['sex']);
-$contact_number = ($_POST['contact_number']);
-$email = ($_POST['email']);
-$username = ($_POST['username']);
-$password = ($_POST['password']);
+// Retrieve and sanitize form data from POST request
+$id_number = mysqli_real_escape_string($conn, $_POST['id_number']);
+$last_name = ucwords(mysqli_real_escape_string($conn, $_POST['last_name']));
+$middle_name = ucwords(mysqli_real_escape_string($conn, $_POST['middle_name']));
+$first_name = ucwords(mysqli_real_escape_string($conn, $_POST['first_name']));
+$gender = mysqli_real_escape_string($conn, $_POST['gender']);
+$age = mysqli_real_escape_string($conn, $_POST['age']);
+$nationality = mysqli_real_escape_string($conn, $_POST['nationality']);
+$birthday = mysqli_real_escape_string($conn, $_POST['birthday']);
+$address = mysqli_real_escape_string($conn, $_POST['address']);
+$contact = mysqli_real_escape_string($conn, $_POST['contact']);
+$email = mysqli_real_escape_string($conn, $_POST['email']);
+$username = mysqli_real_escape_string($conn, $_POST['username']);
+$password = mysqli_real_escape_string($conn, $_POST['password']);
 
-// Check if teacher already exists
-$squery =  mysqli_query($conn, "SELECT * FROM teacher WHERE 
-    first_name = '$first_name' AND
-    middle_name = '$middle_name' AND 
-    last_name = '$last_name' AND 
-    email = '$email' AND 
-    del_status != 'deleted'");
+// Check if the teacher already exists (based on email or ID)
+$check_query = mysqli_query($conn, "SELECT * FROM teacher WHERE id_number = '$id_number' OR email = '$email' AND del_status != 'deleted'");
 
-$check = null; // Initialize check variable
-while ($row = mysqli_fetch_array($squery)) {
-    $check = $row['first_name'] . " " . $row['last_name'];
+$existing = null; 
+while ($row = mysqli_fetch_array($check_query)) {
+    $existing = $row['id_number'] . " " . $row['email'];
 }
 
-// Insert new teacher if not already exists
-if (empty($check)) {
-    $sql2 = "INSERT INTO `teacher` (
-        `first_name`,
-        `middle_name`,
+// If no existing teacher found, insert the new teacher
+if (empty($existing)) {
+    $insert_query = "INSERT INTO `teacher` (
+        `id_number`,
         `last_name`,
-        `sex`,
-        `contact_number`,
+        `middle_name`,
+        `first_name`,
+        `gender`,
+        `age`,
+        `nationality`,
+        `birthday`,
+        `address`,
+        `contact`,
         `email`,
         `username`,
         `password`,
         `del_status`
     ) VALUES (
-        '$first_name',
-        '$middle_name',
+        '$id_number',
         '$last_name',
-        '$sex',
-        '$contact_number',
+        '$middle_name',
+        '$first_name',
+        '$gender',
+        '$age',
+        '$nationality',
+        '$birthday',
+        '$address',
+        '$contact',
         '$email',
         '$username',
         '$password',
-        'active')";
+        'active'
+    )";
 
-    if (mysqli_query($conn, $sql2)) {
+    // Execute the insert query
+    if (mysqli_query($conn, $insert_query)) {
         header("location:index.php?message=Success! New teacher has been added successfully.");
     } else {
-        header("location:add.php?error=Error! Could not insert the teacher.");
+        header("location:add.php?error=Error! Could not add the teacher.");
     }
 } else {
     header("location:add.php?error=Error! Teacher already exists.");
 }
+
 ?>

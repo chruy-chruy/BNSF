@@ -165,4 +165,7 @@ header p {
     box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.5);
   transform: translateY(-5px);
   }
-
+  .required::after {
+    content: " *";
+    color: red;
+}

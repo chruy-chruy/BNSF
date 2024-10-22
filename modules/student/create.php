@@ -3,60 +3,76 @@
 include "../../db_conn.php"; // Include the database connection
 
 // Retrieve and sanitize form data
+$lrn = mysqli_real_escape_string($conn, $_POST['lrn']);
 $first_name = ucwords(mysqli_real_escape_string($conn, $_POST['first_name']));
 $middle_name = ucwords(mysqli_real_escape_string($conn, $_POST['middle_name']));
 $last_name = ucwords(mysqli_real_escape_string($conn, $_POST['last_name']));
-$sex = mysqli_real_escape_string($conn, $_POST['sex']);
+$gender = mysqli_real_escape_string($conn, $_POST['gender']);
+$age = mysqli_real_escape_string($conn, $_POST['age']);
+$nationality = mysqli_real_escape_string($conn, $_POST['nationality']);
+$birthday = mysqli_real_escape_string($conn, $_POST['birthday']);
 $address = mysqli_real_escape_string($conn, $_POST['address']);
-$contact_number = mysqli_real_escape_string($conn, $_POST['contact_number']);
+$contact = mysqli_real_escape_string($conn, $_POST['contact']);
 $email = mysqli_real_escape_string($conn, $_POST['email']);
-$grade_level = mysqli_real_escape_string($conn, $_POST['grade_level']);
+$mothers_name = ucwords(mysqli_real_escape_string($conn, $_POST['mothers_name']));
+$mothers_occupation = ucwords(mysqli_real_escape_string($conn, $_POST['mothers_occupation']));
+$fathers_name = ucwords(mysqli_real_escape_string($conn, $_POST['fathers_name']));
+$fathers_occupation = ucwords(mysqli_real_escape_string($conn, $_POST['fathers_occupation']));
 $strand = mysqli_real_escape_string($conn, $_POST['strand']);
-$section = mysqli_real_escape_string($conn, $_POST['section']);
 $username = mysqli_real_escape_string($conn, $_POST['username']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
 
 // Check if the student already exists
 $squery = mysqli_query($conn, "SELECT * FROM student WHERE 
-    first_name = '$first_name' AND
-    middle_name = '$middle_name' AND 
-    last_name = '$last_name' AND 
+    lrn = '$lrn' OR
     email = '$email' AND 
     del_status != 'deleted'");
 
 $check = null; // Initialize check variable
 while ($row = mysqli_fetch_array($squery)) {
-    $check = $row['first_name'] . " " . $row['last_name'];
+    $check = $row['lrn'] . " " . $row['email'];
 }
 
 // Insert new student if not already exists
 if (empty($check)) {
     // Prepare SQL insert statement
     $sql2 = "INSERT INTO `student` (
+        `lrn`,
         `first_name`,
         `middle_name`,
         `last_name`,
-        `sex`,
+        `gender`,
+        `age`,
+        `nationality`,
+        `birthday`,
         `address`,
-        `contact_number`,
+        `contact`,
         `email`,
-        `grade_level`,
+        `mothers_name`,
+        `mothers_occupation`,
+        `fathers_name`,
+        `fathers_occupation`,
         `strand`,
-        `section`,
         `username`,
         `password`,
         `del_status`
     ) VALUES (
+        '$lrn',
         '$first_name',
         '$middle_name',
         '$last_name',
-        '$sex',
+        '$gender',
+        '$age',
+        '$nationality',
+        '$birthday',
         '$address',
-        '$contact_number',
+        '$contact',
         '$email',
-        '$grade_level',
+        '$mothers_name',
+        '$mothers_occupation',
+        '$fathers_name',
+        '$fathers_occupation',
         '$strand',
-        '$section',
         '$username',
         '$password',
         'active')";
