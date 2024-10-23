@@ -16,7 +16,7 @@ include "../../db_conn.php";
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Strand</title>
+  <title>Add User</title>
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
@@ -27,13 +27,8 @@ include "../../db_conn.php";
 
   <!-- Sidebar -->
   <?php 
-  $page = 'Strand'; 
-  include "../../navbar.php"; 
-  $teachers_query = mysqli_query($conn, "
-SELECT id, CONCAT(first_name, ' ', last_name) AS full_name 
-FROM teacher 
-WHERE id NOT IN (SELECT teacher_id FROM strand WHERE teacher_id IS NOT NULL AND del_status != 'deleted')
-");
+  $page = 'User'; 
+  include "../../navbar.php";
   ?>
 
   <!-- Main Content -->
@@ -69,35 +64,38 @@ if (alert) {
     }, 3000); // 3 seconds delay
 }
 </script>
-      <h1 class="text-center mb-4">Add Strand</h1>
+      <h1 class="text-center mb-4">Add User</h1>
 
       <form action="create.php" method="POST">
 
         <div class="row mb-3">
-          <h3 class="mb-3">Subject Information</h3>
+          <h3 class="mb-3">User Information</h3>
           
           <div class="col-md-6">
-            <label for="strand_name" class="form-label required">Strand Name</label>
-            <input type="text" class="form-control" id="strand_name" name="strand_name" required>
+            <label for="name" class="form-label required">Full Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
           </div>
 
-          <div class="col-md-6">
-            <label for="strand_code" class="form-label required">Strand Code</label>
-            <input type="text" class="form-control" id="strand_code" name="strand_code" required>
+          <div class="col-md-6 mb-3">
+            <label for="username" class="form-label required">User Name</label>
+            <input type="text" class="form-control" id="username" name="username" required>
           </div>
+
+        <div class="col-md-6">
+            <label for="password" class="form-label required">User Password</label>
+            <input type="text" class="form-control" id="password" name="password" required>
         </div>
+        
           
           <div class="col-md-6">
-            <label for="teacher_id" class="form-label required">Assigned Adviser</label>
-            <select name="teacher_id" class="form-control" required>
-                        <option value="" hidden>Select a Teacher</option>
-                        <?php while ($teacher = mysqli_fetch_assoc($teachers_query)): ?> 
-                            <option value="<?php echo $teacher['id']; ?>" <?php echo (isset($row['teacher_id']) && $row['teacher_id'] == $teacher['id']) ? 'selected' : ''; ?>>         
-                                <?php echo $teacher['full_name']; ?>     
-                            </option>       
-                        <?php endwhile; ?>  
+            <label for="role" class="form-label required">User Role</label>
+            <select name="role" class="form-control" required>
+                        <option value="" hidden>Select a User Role</option>
+                        <option value="Registrar" >Registrar</option>
+                        <option value="Administrator" >Administrator</option>
                     </select>
           </div>
+
         </div>
 
         <div class="text-center">

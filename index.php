@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Homepage with Login Modal</title>
+    <title>BNSF</title>
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
@@ -25,12 +25,11 @@
 
     <!-- Header Section (with Cover Image) -->
     <header style="background-image: url('assets/img/cover.jpg'); height: 100vh; background-size: cover; background-position: center;">
-    <div class="header-content">
-        <h1>Welcome to BNSF</h1>
-        <p>BULA NATIONAL SCHOOL OF FISHERIES INFORMATION MANAGEMENT SYSTEM </p>
-    </div>
-</header>
-
+        <div class="header-content">
+            <h1>Welcome to BNSF</h1>
+            <p>BULA NATIONAL SCHOOL OF FISHERIES INFORMATION MANAGEMENT SYSTEM </p>
+        </div>
+    </header>
 
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
@@ -39,13 +38,29 @@
             <h2>Login</h2>
             <form class="login" action="validate_login.php" method="POST">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username">
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
                 
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                
+                <!-- Role Selection -->
+                <label for="role">Login as:</label>
+                <div class="role-options">
+                    <input type="radio" id="registrar" name="role" value="registrar" required>
+                    <label for="registrar">Registrar</label>
+                    
+                    <input type="radio" id="student" name="role" value="student" required>
+                    <label for="student">Student</label>
+                    
+                    <input type="radio" id="teacher" name="role" value="teacher" required>
+                    <label for="teacher">Teacher</label>
+                </div>
+                
+                <!-- Display error message if any -->
                 <?php if (isset($_GET['error'])) { ?>
-                <p class="error-message" style="margin-bottom: 15px; color :red ;"><?php echo $_GET['error']; ?></p>
-            <?php } ?>
+                    <p class="error-message" style="margin-bottom: 15px; color: red;"><?php echo $_GET['error']; ?></p>
+                <?php } ?>
+                
                 <button type="submit" class="submit-btn">Login</button>
             </form>
         </div>
@@ -70,10 +85,10 @@
             }
         }
 
-         // Check if there's an error and open the modal automatically
-    <?php if (isset($_GET['error'])) { ?>
-        openModal();
-    <?php } ?>
+        // Check if there's an error and open the modal automatically
+        <?php if (isset($_GET['error'])) { ?>
+            openModal();
+        <?php } ?>
     </script>
 </body>
 </html>

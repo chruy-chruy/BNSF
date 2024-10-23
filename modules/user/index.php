@@ -13,7 +13,7 @@ if (isset($_GET['message'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Subject Module</title>
+  <title>User Module</title>
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
@@ -22,7 +22,7 @@ if (isset($_GET['message'])) {
 </head>
 <body>
 <?php 
-$page = 'Subject';
+$page = 'User';
 
 include "../../db_conn.php";
  ?>
@@ -34,11 +34,11 @@ include "../../db_conn.php";
 
 <!-- Teacher Module -->
 <div id="teacherSection">
-  <h1>Subject Module</h1>
-  <p>Manage the list of Strand here.</p>
+  <h1>User Module</h1>
+  <p>Manage the list of User here.</p>
 
   <!-- Add Teacher Button -->
-<a href="add.php" class="btn btn-success mb-3">Add Subject</a>
+<a href="add.php" class="btn btn-success mb-3">Add User</a>
 <div class="container mt-4">
 
 <?php if (isset($message)): ?>
@@ -76,24 +76,18 @@ if (alert) {
 include "../../db_conn.php"; // Include database connection
 
 // Query to fetch Subject and teacher data
-$squery = mysqli_query($conn, "
-         SELECT s.*, CONCAT(t.first_name, ' ', t.last_name) AS teacher_name 
-         FROM subject s 
-         LEFT JOIN teacher t ON s.teacher_id = t.id 
-         WHERE s.del_status != 'deleted' 
-         ORDER BY s.id DESC;
-     ");
+$squery = mysqli_query($conn, "SELECT * FROM user");
 ?>
 
 <table id="teacherTable" class="table table-striped table-hover">
   <thead>
     <tr>
       <th>ID</th>
-      <th>Subject Name</th>
-      <th>Subject Code</th>
-      <th>Assigned Teacher</th>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Role</th>
       <th class="text-end">Actions</th>
-    </tr>
+    </tr>`
   </thead>
   <tbody>
     <?php 
@@ -105,8 +99,8 @@ $squery = mysqli_query($conn, "
     <tr>
       <td><?php echo $id; ?></td>
       <td><?php echo $row['name']; ?></td>
-      <td><?php echo $row['code']; ?></td>
-      <td><?php echo $row['teacher_name']; ?></td>
+      <td><?php echo $row['username']; ?></td>
+      <td><?php echo $row['role']; ?></td>
       <td class="text-end">
         <a href="view.php?id=<?php echo $id; ?>" class="btn btn-info btn-sm">view</a>
       </td>
