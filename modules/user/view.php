@@ -27,13 +27,12 @@ if (isset($_GET['message'])) {
 $page = 'User'; // For active page indicator in sidebar
 include "../../db_conn.php"; // Include database connection
 
-// Get the teacher ID from the URL
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
 
-    $query = mysqli_query($conn, "SELECT * FROM user WHERE id = '$id'");
-    $row = mysqli_fetch_array($query);
-}
+    $ids = $_GET['id'];
+    $query = mysqli_query($conn, "SELECT * FROM user WHERE id = '$ids'");
+    // $row = mysqli_fetch_array($query);
+    while ($row = mysqli_fetch_array($query)) {
+
 ?>
 
 <!-- Sidebar -->
@@ -77,14 +76,14 @@ if (alert) {
       <a href="index.php" class="btn btn-secondary mb-3">
     <i class="bi bi-arrow-left"></i> Back
   </a>
-      <form action="update.php?id=<?php echo $row['id']; ?>" method="POST">
+      <form action="update.php?id=<?php echo $row['id'];?>" method="POST">
 
       <div class="row mb-3">
           <h3 class="mb-3">User Information</h3>
           <div class="col-md-6 mb-3" >
             <label for="name" class="form-label required">Full Name</label>
             <input type="text" class="form-control" id="name" name="name" required
-            value = "<?php echo $row['name']; ?>">
+            value = "<?php echo $row['name'];?>">
           </div>
           <div class="col-md-6 ">
             <label for="username" class="form-label required">User Name</label>
@@ -129,6 +128,7 @@ document.getElementById('deleteButton').addEventListener('click', function() {
     }
 });
   </script>
+  <?php }?>
 <!-- Bootstrap 5 JS -->
 <script src="../../assets/js/DataTables/bootstrap.bundle.min.js"></script>
 </body>

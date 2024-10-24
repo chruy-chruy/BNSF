@@ -38,7 +38,7 @@ include "../../db_conn.php";
   <p>Manage the list of Strand here.</p>
 
   <!-- Add Teacher Button -->
-<a href="add.php" class="btn btn-success mb-3">Add Subject</a>
+<a href="add.php" class="btn btn-success mb-3">Add Strand</a>
 <div class="container mt-4">
 
 <?php if (isset($message)): ?>

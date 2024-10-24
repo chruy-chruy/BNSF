@@ -87,7 +87,7 @@ $squery = mysqli_query($conn, "SELECT * FROM user");
       <th>Username</th>
       <th>Role</th>
       <th class="text-end">Actions</th>
-    </tr>`
+    </tr>
   </thead>
   <tbody>
     <?php 
