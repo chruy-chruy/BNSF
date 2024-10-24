@@ -46,8 +46,8 @@
                 <!-- Role Selection -->
                 <label for="role">Login as:</label>
                 <div class="role-options">
-                    <input type="radio" id="registrar" name="role" value="registrar" required>
-                    <label for="registrar">Registrar</label>
+                    <input type="radio" id="admin" name="role" value="admin" required>
+                    <label for="admin">Admin</label>
                     
                     <input type="radio" id="student" name="role" value="student" required>
                     <label for="student">Student</label>

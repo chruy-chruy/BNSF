@@ -35,7 +35,7 @@ include "../../db_conn.php";
 <!-- Teacher Module -->
 <div id="teacherSection">
   <h1>Subject Module</h1>
-  <p>Manage the list of Strand here.</p>
+  <p>Manage the list of Subject here.</p>
 
   <!-- Add Teacher Button -->
 <a href="add.php" class="btn btn-success mb-3">Add Subject</a>

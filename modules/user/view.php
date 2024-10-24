@@ -101,11 +101,11 @@ if (alert) {
   
 
           <div class="col-md-6">
-            <label for="role" class="form-label required">Assigned Adviser</label>
+            <label for="role" class="form-label required">User Role</label>
             <select name="role" class="form-control" required>
                         <option value="<?php echo $row['role']; ?>" hidden><?php echo $row['role']; ?></option>
-                        <option value="Registrar" >Registrar</option>
-                        <option value="Administrator" >Administrator</option>
+                        <option value="Admin" >Admin</option>
+                        <option value="Super Admin" >Super Admin</option>
                     </select>
           </div>
         </div>

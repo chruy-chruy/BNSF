@@ -33,10 +33,7 @@
   <div class="content" id="content">
   <div class="d-flex justify-content-center align-items-center ">
   <div class="schedule-header text-center">
-    <h2>BULA NATIONAL SCHOOL OF FISHERIES</h2>
-    <h4>General Santos City</h4>
-    <p>Certificate of Registration<br>School Year: 2024-2025 Term: First Semester</p>
-    <p>Student Name: John Doe<br>Grade level: 11</p>
+    <h2>My Schedule</h2>
   </div>
 </div>
 

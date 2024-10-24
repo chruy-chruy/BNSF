@@ -91,8 +91,8 @@ if (alert) {
             <label for="role" class="form-label required">User Role</label>
             <select name="role" class="form-control" required>
                         <option value="" hidden>Select a User Role</option>
-                        <option value="Registrar" >Registrar</option>
-                        <option value="Administrator" >Administrator</option>
+                        <option value="Admin" >Admin</option>
+                        <option value="Super Admin" >Super Admin</option>
                     </select>
           </div>
 
