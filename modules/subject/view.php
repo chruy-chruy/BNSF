@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
     SELECT s.*, CONCAT(t.first_name, ' ', t.last_name) AS teacher_name 
     FROM subject s 
     LEFT JOIN teacher t ON s.teacher_id = t.id 
-    WHERE s.del_status != 'deleted' 
+    WHERE s.del_status != 'deleted'  AND s.id = '$id'
     ORDER BY s.id DESC;
 ");
     $row = mysqli_fetch_array($query);
