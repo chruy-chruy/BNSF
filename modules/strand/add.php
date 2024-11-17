@@ -76,18 +76,17 @@ if (alert) {
         <div class="row mb-3">
           <h3 class="mb-3">Subject Information</h3>
           
-          <div class="col-md-6">
-            <label for="strand_name" class="form-label required">Strand Name</label>
+          <div class="col-md-6 mb-3">
+            <label for="strand_name" class="form-label required">Strand/Track Name</label>
             <input type="text" class="form-control" id="strand_name" name="strand_name" required>
           </div>
-
-          <div class="col-md-6">
-            <label for="strand_code" class="form-label required">Strand Code</label>
+       
+          <div class="col-md-6 mb-3">
+            <label for="strand_code" class="form-label required">Strand/Track Code</label>
             <input type="text" class="form-control" id="strand_code" name="strand_code" required>
           </div>
-        </div>
-          
-          <div class="col-md-6">
+
+          <div class="col-md-6 mb-3">
             <label for="teacher_id" class="form-label required">Assigned Adviser</label>
             <select name="teacher_id" class="form-control" required>
                         <option value="" hidden>Select a Teacher</option>
@@ -98,7 +97,13 @@ if (alert) {
                         <?php endwhile; ?>  
                     </select>
           </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="details" class="form-label required">Strand/Track Details</label>
+            <textarea type="text" class="form-control" id="details" name="details" required></textarea>
+          </div>
         </div>
+        
 
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Submit</button>

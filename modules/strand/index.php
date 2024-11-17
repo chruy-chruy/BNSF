@@ -13,7 +13,7 @@ if (isset($_GET['message'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Strand Module</title>
+  <title>Strand/Track Module</title>
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
@@ -34,11 +34,11 @@ include "../../db_conn.php";
 
 <!-- Teacher Module -->
 <div id="teacherSection">
-  <h1>Strand Module</h1>
-  <p>Manage the list of Strand here.</p>
+  <h1>Strand/Track Module</h1>
+  <p>Manage the list of Strand/Track here.</p>
 
   <!-- Add Teacher Button -->
-<a href="add.php" class="btn btn-success mb-3">Add Strand</a>
+<a href="add.php" class="btn btn-success mb-3">Add Strand/Track</a>
 <div class="container mt-4">
 
 <?php if (isset($message)): ?>

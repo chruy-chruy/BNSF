@@ -9,13 +9,15 @@ $id = $_GET['id'];
 $strand_name = $_POST['strand_name'];
 $strand_code = $_POST['strand_code'];
 $teacher_id = $_POST['teacher_id'];
+$details = $_POST['details'];
 
 
     // Prepare SQL update statement
     $sql2 = "UPDATE `strand` SET
         `code` = '$strand_code',
         `name` = '$strand_name',
-        `teacher_id` = '$teacher_id'
+        `teacher_id` = '$teacher_id',
+        `details` = '$details'
     WHERE id = '$id'";
 
     // Execute the query

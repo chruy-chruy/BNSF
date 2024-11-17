@@ -6,6 +6,7 @@ include "../../db_conn.php"; // Include your database connection
 $strand_name = $_POST['strand_name'];
 $strand_code = $_POST['strand_code'];
 $teacher_id = $_POST['teacher_id'];
+$details = $_POST['details'];
 
 // Check if the teacher already exists (based on email or ID)
 $check_query = mysqli_query($conn, "SELECT * FROM `strand` WHERE code = '$strand_name' OR `name` = '$strand_code' AND del_status != 'deleted'");
@@ -21,11 +22,13 @@ if (empty($existing)) {
         `code`,
         `name`,
         `teacher_id`,
+        `details`,
         `del_status`
     ) VALUES (
         '$strand_code',
         '$strand_name',
         '$teacher_id',
+        '$details',
         'active'
     )";
 

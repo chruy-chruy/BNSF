@@ -19,12 +19,12 @@ $nav_row = mysqli_fetch_array($nav_query);
     <h6 class="text-center">Hello <?php echo $nav_row['name']; ?>! </h6>
 
     <a href="../dashboard" class="<?php if ($page == 'Dashboard') {echo 'active';} ?>" >Dashboard</a>
-    <a href="../teacher" class="<?php if ($page == 'Teacher') {echo 'active';} ?>">Teachers</a>
-    <a href="../subject" class="<?php if ($page == 'Subject') {echo 'active';} ?>">Subjects</a>
-    <a href="../strand" class="<?php if ($page == 'Strand') {echo 'active';} ?>">Strands</a>
-    <a href="../Student" class="<?php if ($page == 'Student') {echo 'active';} ?>">Students</a>
+    <a href="../teacher" class="<?php if ($page == 'Teacher') {echo 'active';} ?>">Teacher</a>
+    <a href="../subject" class="<?php if ($page == 'Subject') {echo 'active';} ?>">Subject</a>
+    <a href="../strand" class="<?php if ($page == 'Strand') {echo 'active';} ?>">Strand/Track</a>
+    <a href="../Student" class="<?php if ($page == 'Student') {echo 'active';} ?>">Student</a>
     <a href="../schedule" class="<?php if ($page == 'Schedule') {echo 'active';} ?>">Schedule</a>
-    <a href="../grades" class="<?php if ($page == 'Grades') {echo 'active';} ?>">Grades</a>
+    <a href="../grades" class="<?php if ($page == 'Grades') {echo 'active';} ?>">Grade</a>
     <?php if ($nav_row['role'] == "Super Admin") {  ?>
     <a href="../user" class="<?php if ($page == 'User') {echo 'active';} ?>">Users</a>
     <?php }?>
