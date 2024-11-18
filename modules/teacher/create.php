@@ -8,8 +8,8 @@ $last_name = ucwords(mysqli_real_escape_string($conn, $_POST['last_name']));
 $middle_name = ucwords(mysqli_real_escape_string($conn, $_POST['middle_name']));
 $first_name = ucwords(mysqli_real_escape_string($conn, $_POST['first_name']));
 $gender = mysqli_real_escape_string($conn, $_POST['gender']);
-$age = mysqli_real_escape_string($conn, $_POST['age']);
-$nationality = mysqli_real_escape_string($conn, $_POST['nationality']);
+// $age = mysqli_real_escape_string($conn, $_POST['age']);
+// $nationality = mysqli_real_escape_string($conn, $_POST['nationality']);
 $birthday = mysqli_real_escape_string($conn, $_POST['birthday']);
 $address = mysqli_real_escape_string($conn, $_POST['address']);
 $contact = mysqli_real_escape_string($conn, $_POST['contact']);
@@ -33,8 +33,6 @@ if (empty($existing)) {
         `middle_name`,
         `first_name`,
         `gender`,
-        `age`,
-        `nationality`,
         `birthday`,
         `address`,
         `contact`,
@@ -48,8 +46,6 @@ if (empty($existing)) {
         '$middle_name',
         '$first_name',
         '$gender',
-        '$age',
-        '$nationality',
         '$birthday',
         '$address',
         '$contact',

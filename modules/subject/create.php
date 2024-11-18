@@ -8,8 +8,8 @@ $subject_code = $_POST['subject_code'];
 $details = $_POST['details'];
 $teacher_id = $_POST['teacher_id'];
 
-// Check if the teacher already exists (based on email or ID)
-$check_query = mysqli_query($conn, "SELECT * FROM `subject` WHERE code = '$subject_code' OR `name` = '$subject_name' AND del_status != 'deleted'");
+// Check if the teacher and subject already exists (based on email or ID)
+$check_query = mysqli_query($conn, "SELECT * FROM `subject` WHERE code = '$subject_code' AND `teacher_id` = '$teacher_id' AND del_status != 'deleted'");
 
 $existing = null; 
 while ($row = mysqli_fetch_array($check_query)) {

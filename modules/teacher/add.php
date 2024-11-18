@@ -100,17 +100,6 @@ if (alert) {
             </select>
           </div>
           <div class="col-md-6">
-            <label for="age" class="form-label required">Age</label>
-            <input type="number" class="form-control" id="age" name="age" required>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="nationality" class="form-label required">Nationality</label>
-            <input type="text" class="form-control" id="nationality" name="nationality" required>
-          </div>
-          <div class="col-md-6">
             <label for="birthday" class="form-label required">Birthday</label>
             <input type="date" class="form-control" id="birthday" name="birthday" required>
           </div>

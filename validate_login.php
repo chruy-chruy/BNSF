@@ -6,6 +6,7 @@ echo $_POST['username'] . $_POST['password'];
 
 if (isset($_POST['username']) && isset($_POST['password'])) {
 
+    //validate and make data secured in sql injection
     function validate($data)
     {
         $data = trim($data);
