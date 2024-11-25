@@ -7,6 +7,7 @@ if (isset($_GET['message'])) {
     $message = $_GET['error'];
     $alertType = 'danger'; // Set alert type to 'danger' for errors
 }
+$track = $_GET['track'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +23,7 @@ if (isset($_GET['message'])) {
 </head>
 <body>
 <?php 
-$page = 'Strand';
+$page = "Strand/$track";
 
 include "../../db_conn.php";
  ?>
@@ -34,11 +35,11 @@ include "../../db_conn.php";
 
 <!-- Teacher Module -->
 <div id="teacherSection">
-  <h1>Strand/Track Module</h1>
-  <p>Manage the list of Strand/Track here.</p>
+  <h1><?php echo $track; ?> Module</h1>
+  <p>Manage the list of Strand here.</p>
 
   <!-- Add Teacher Button -->
-<a href="add.php" class="btn btn-success mb-3">Add Strand/Track</a>
+<a href="add.php?track=<?php echo $track;?>" class="btn btn-success mb-3">Add Strand</a>
 <div class="container mt-4">
 
 <?php if (isset($message)): ?>
@@ -80,7 +81,7 @@ $squery = mysqli_query($conn, "
          SELECT s.*, CONCAT(t.first_name, ' ', t.last_name) AS teacher_name 
          FROM strand s 
          LEFT JOIN teacher t ON s.teacher_id = t.id 
-         WHERE s.del_status != 'deleted' 
+         WHERE s.del_status != 'deleted' AND s.track='$track'
          ORDER BY s.id DESC;
      ");
 ?>
@@ -90,6 +91,7 @@ $squery = mysqli_query($conn, "
     <tr>
       <th>ID</th>
       <th>Strand Name</th>
+      <th>Strand Details</th>
       <th>Strand Code</th>
       <th>Assigned Adviser</th>
       <th class="text-end">Actions</th>
@@ -105,10 +107,11 @@ $squery = mysqli_query($conn, "
     <tr>
       <td><?php echo $id; ?></td>
       <td><?php echo $row['name']; ?></td>
+      <td><?php echo $row['details']; ?></td>
       <td><?php echo $row['code']; ?></td>
       <td><?php echo $row['teacher_name']; ?></td>
       <td class="text-end">
-        <a href="view.php?id=<?php echo $id; ?>" class="btn btn-info btn-sm">view</a>
+        <a href="view.php?id=<?php echo $id; ?>&track=<?php echo $track;?>" class="btn btn-info btn-sm">view</a>
       </td>
     </tr>
     <?php } ?>

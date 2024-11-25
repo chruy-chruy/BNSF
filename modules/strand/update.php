@@ -10,7 +10,7 @@ $strand_name = $_POST['strand_name'];
 $strand_code = $_POST['strand_code'];
 $teacher_id = $_POST['teacher_id'];
 $details = $_POST['details'];
-
+$track = $_POST['track'];
 
     // Prepare SQL update statement
     $sql2 = "UPDATE `strand` SET
@@ -22,9 +22,9 @@ $details = $_POST['details'];
 
     // Execute the query
     if (mysqli_query($conn, $sql2)) {
-        header("location:view.php?id=$id&message=Success! Strand details have been updated successfully.");
+        header("location:view.php?track=$track&id=$id&message=Success! Strand details have been updated successfully.");
     } else {
-        header("location:view.php?id=$id&error=Error! Could not update the Strand details.");
+        header("location:view.php?track=$track&id=$id&error=Error! Could not update the Strand details.");
     }
 
 ?>

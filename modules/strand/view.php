@@ -7,6 +7,7 @@ if (isset($_GET['message'])) {
     $message = $_GET['error'];
     $alertType = 'danger'; // Set alert type to 'danger' for errors
 }
+$track = $_GET['track'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +25,7 @@ if (isset($_GET['message'])) {
 </head>
 <body>
 <?php 
-$page = 'Strand'; // For active page indicator in sidebar
+$page = "Strand/$track"; // For active page indicator in sidebar
 include "../../db_conn.php"; // Include database connection
 
 // Get the teacher ID from the URL
@@ -85,21 +86,19 @@ if (alert) {
 }
 </script>
     <div class="container my-5">
-      <h1 class="text-center mb-4">View Subject</h1>
-      <a href="index.php" class="btn btn-secondary mb-3">
-    <i class="bi bi-arrow-left"></i> Back
-  </a>
+      <h1 class="text-center mb-4">View Strand</h1>
+      <a href="./?track=<?php echo $track;?>" class="btn btn-secondary mb-3"></i> Back</a>
       <form action="update.php?id=<?php echo $row['id']; ?>" method="POST">
 
       <div class="row mb-3">
-          <h3 class="mb-3">Subject Information</h3>
+          <h3 class="mb-3">Strand Information</h3>
           <div class="col-md-6 mb-3">
-            <label for="strand_name" class="form-label required">Strand/Track Name</label>
+            <label for="strand_name" class="form-label required">Strand Name</label>
             <input type="text" class="form-control" id="strand_name" name="strand_name" required
             value = "<?php echo $row['name']; ?>">
           </div>
           <div class="col-md-6 mb-3">
-            <label for="strand_code" class="form-label required">Strand/Track Code</label>
+            <label for="strand_code" class="form-label required">Strand Code</label>
             <input type="text" class="form-control" id="strand_code" name="strand_code" required
             value = "<?php echo $row['code']; ?>">
           </div>
@@ -117,7 +116,13 @@ if (alert) {
                         <?php endwhile; ?>
                     </select>
           </div>
+
           <div class="col-md-6 mb-3">
+            <label for="track" class="form-label required">Track Name</label>
+            <input type="text" class="form-control" id="track" name="track" required readonly
+            value = "<?php echo $row['track']; ?>">
+          </div>
+          <div class="col-md-12 mb-3">
             <label for="details" class="form-label required">Strand/Track Details</label>
             <textarea type="text" class="form-control" id="details" name="details" required ><?php echo $row['details']; ?></textarea>
           </div>
@@ -125,8 +130,7 @@ if (alert) {
 
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Submit</button>
-          <button type="button" class="btn btn-danger" id="deleteButton">
-        <i class="bi bi-trash"></i> Delete
+          <button type="button" class="btn btn-danger" id="deleteButton"></i> Delete
       </button>
         </div>
       </form>
@@ -138,7 +142,7 @@ if (alert) {
 document.getElementById('deleteButton').addEventListener('click', function() {
     const confirmed = confirm('Are you sure you want to delete this Strand?');
     if (confirmed) {
-        window.location.href = 'delete.php?id=<?php echo $row['id']; ?>'; // Redirect to delete page
+        window.location.href = 'delete.php?track=<?php echo $track ?>&id=<?php echo $row['id']; ?>'; // Redirect to delete page
     }
 });
   </script>

@@ -12,21 +12,33 @@ $nav_row = mysqli_fetch_array($nav_query);
 
 ?>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <div class="sidebar" id="sidebar">
-    <div>
-      <img src="../../assets/img/logo.png" alt="Logo" class="logo">
-    </div>
-    <h6 class="text-center">Hello <?php echo $nav_row['name']; ?>! </h6>
+<div>
+    <img src="../../assets/img/logo.png" alt="Logo" class="logo">
+</div>
+<h6 class="text-center">Hello <?php echo $nav_row['name']; ?>! </h6>
 
-    <a href="../dashboard" class="<?php if ($page == 'Dashboard') {echo 'active';} ?>" >Dashboard</a>
-    <a href="../teacher" class="<?php if ($page == 'Teacher') {echo 'active';} ?>">Teacher</a>
-    <a href="../subject" class="<?php if ($page == 'Subject') {echo 'active';} ?>">Subject</a>
-    <a href="../strand" class="<?php if ($page == 'Strand') {echo 'active';} ?>">Strand/Track</a>
-    <a href="../Student" class="<?php if ($page == 'Student') {echo 'active';} ?>">Student</a>
-    <a href="../schedule" class="<?php if ($page == 'Schedule') {echo 'active';} ?>">Schedule</a>
-    <a href="../grades" class="<?php if ($page == 'Grades') {echo 'active';} ?>">Grade</a>
-    <?php if ($nav_row['role'] == "Super Admin") {  ?>
-    <a href="../user" class="<?php if ($page == 'User') {echo 'active';} ?>">Users</a>
-    <?php }?>
-    <a href="../../logout.php">Logout</a>
-  </div>
+<a href="../dashboard" class="<?php if ($page == 'Dashboard') {echo 'active';} ?>"><i class="bi bi-house-door"></i> Dashboard</a>
+<a href="../teacher" class="<?php if ($page == 'Teacher') {echo 'active';} ?>"><i class="bi bi-person"></i> Teacher</a>
+<a href="../subject" class="<?php if ($page == 'Subject') {echo 'active';} ?>"><i class="bi bi-book"></i> Subject</a>
+
+<!-- Fixed Submenu for Track -->
+<div class="submenu">
+    <a href="#" class="<?php if ($page == 'Strand/TVL' || $page == 'Strand/Academic') {echo 'active';} ?>"><i class="bi bi-geo-alt"></i> Track</a>
+    <ul>
+        <li><a href="../strand?track=TVL" class="<?php if ($page == 'Strand/TVL') {echo 'active';} ?>"><i class="bi bi-card-list"></i> TVL</a></li>
+        <li><a href="../strand?track=Academic" class="<?php if ($page == 'Strand/Academic') {echo 'active';} ?>"><i class="bi bi-bookmark"></i> Academic</a></li>
+    </ul>
+</div>
+
+<a href="../Student" class="<?php if ($page == 'Student') {echo 'active';} ?>"><i class="bi bi-person-lines-fill"></i> Student</a>
+<a href="../schedule" class="<?php if ($page == 'Schedule') {echo 'active';} ?>"><i class="bi bi-calendar-event"></i> Schedule</a>
+<a href="../grades" class="<?php if ($page == 'Grades') {echo 'active';} ?>"><i class="bi bi-bar-chart"></i> Grade</a>
+
+<?php if ($nav_row['role'] == "Super Admin") { ?>
+    <a href="../user" class="<?php if ($page == 'User') {echo 'active';} ?>"><i class="bi bi-person-circle"></i> Users</a>
+<?php } ?>
+
+<a href="../../logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+</div>

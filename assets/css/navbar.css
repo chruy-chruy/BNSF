@@ -16,6 +16,7 @@
     padding: 10px;
     text-decoration: none;
     display: block;
+    font-size: 18px;
   }
 
   .sidebar a:hover {
@@ -50,4 +51,31 @@
     margin-bottom: 10px;
     margin-left: 65px;
     width: 120px;
+}
+
+
+.submenu {
+  margin: 10px 0;
+}
+
+.submenu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 0 15px; /* Indent submenu items */
+}
+
+.submenu ul li {
+  margin: 5px 0;
+}
+
+.submenu ul li a {
+  text-decoration: none;
+  display: block;
+  padding: 5px;
+  color: white;
+  font-size: 15px;
+}
+
+.submenu ul li a:hover {
+  background-color: #007bff;
 }

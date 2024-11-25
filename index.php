@@ -1,3 +1,11 @@
+<?php
+
+session_start();
+if (isset($_SESSION['id'])) {
+    header("Location: modules/dashboard/");
+    exit();
+
+} ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

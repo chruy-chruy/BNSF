@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2024 at 01:08 PM
+-- Generation Time: Nov 25, 2024 at 01:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `strand` (
   `id` int(11) NOT NULL,
+  `track` varchar(100) NOT NULL,
   `code` varchar(100) NOT NULL,
   `name` varchar(100) NOT NULL,
   `details` varchar(100) NOT NULL,
@@ -40,8 +41,10 @@ CREATE TABLE `strand` (
 -- Dumping data for table `strand`
 --
 
-INSERT INTO `strand` (`id`, `code`, `name`, `details`, `teacher_id`, `del_status`) VALUES
-(1, 'Humms101', 'Humms', 'HUmmssdasd nasdas', '1', 'active');
+INSERT INTO `strand` (`id`, `track`, `code`, `name`, `details`, `teacher_id`, `del_status`) VALUES
+(2, 'TVL', 'HE', 'Home Economics', '21321312', '2', 'deleted'),
+(3, 'TVL', 'AFA-1', 'AFA', 'Agri- Fishery Arts', '1', 'active'),
+(5, 'Academic', 'ABM-1', 'ABM', 'Accountancy, Business, and Management', '2', 'active');
 
 -- --------------------------------------------------------
 
@@ -73,6 +76,13 @@ CREATE TABLE `student` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `student`
+--
+
+INSERT INTO `student` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `gender`, `age`, `nationality`, `birthday`, `address`, `contact`, `email`, `mothers_name`, `mothers_occupation`, `fathers_name`, `fathers_occupation`, `strand`, `username`, `password`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, '1233211233', 'Onyok', '', 'Dela Cruz', 'Male', 16, 'filipino', '2007-03-22', 'Lagao General Santos City', '09269883740', 'onyok@gmail.com', 'Mama', 'House Wife', 'Papa', 'Driver', '5', 'onyok@gmail.com', '1233211233', 'active', '2024-11-25 12:43:17', '2024-11-25 12:43:17');
 
 -- --------------------------------------------------------
 
@@ -128,8 +138,8 @@ CREATE TABLE `teacher` (
 --
 
 INSERT INTO `teacher` (`id`, `id_number`, `last_name`, `middle_name`, `first_name`, `gender`, `age`, `nationality`, `birthday`, `address`, `contact`, `email`, `username`, `password`, `del_status`, `created_at`) VALUES
-(1, '123', '123', '123', '12321', 'Male', '21', 'filipino', '2003-11-11', 'Purok 15 Zone 4 Lagao. General Santos City', '09269883740', 'test@gmail.com', 'test@gmail.com', '123', 'active', '2024-10-24 15:52:31'),
-(2, '123123', 'Ad', '', 'Asd', 'Male', '', '', '1989-02-11', 'Purok 15 Zone 4 Lagao. General Santos City', '09269883740', 'test2@gmail.com', 'test2@gmail.com', '123123', 'active', '2024-11-18 11:47:34');
+(1, '123', 'Dela Cruz', 'Fernando', 'Juan', 'Male', '21', 'filipino', '2003-11-11', 'Purok 15 Zone 4 Lagao. General Santos City', '09269883740', 'juan@gmail.com', 'juan@gmail.com', '123', 'active', '2024-10-24 15:52:31'),
+(2, '123123', 'Dalisay', 'Fernandez', 'Cardo', 'Male', '', '', '1989-02-11', 'Purok 15 Zone 4 Lagao. General Santos City', '09269883740', 'cardo@gmail.com', 'cardo@gmail.com', '123123', 'active', '2024-11-18 11:47:34');
 
 -- --------------------------------------------------------
 
@@ -200,13 +210,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `strand`
 --
 ALTER TABLE `strand`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `subject`

@@ -6,6 +6,7 @@ include "../../db_conn.php"; // Include your database connection
 $strand_name = $_POST['strand_name'];
 $strand_code = $_POST['strand_code'];
 $teacher_id = $_POST['teacher_id'];
+$track = $_POST['track'];
 $details = $_POST['details'];
 
 // Check if the teacher already exists (based on email or ID)
@@ -22,24 +23,26 @@ if (empty($existing)) {
         `code`,
         `name`,
         `teacher_id`,
+        `track`,
         `details`,
         `del_status`
     ) VALUES (
         '$strand_code',
         '$strand_name',
         '$teacher_id',
+        '$track',
         '$details',
         'active'
     )";
 
     // Execute the insert query
     if (mysqli_query($conn, $insert_query)) {
-        header("location:index.php?message=Success! New Strand has been added successfully.");
+        header("location:index.php?track=$track&message=Success! New Strand has been added successfully.");
     } else {
-        header("location:add.php?error=Error! Could not add the Strand.");
+        header("location:add.php?track=$track&error=Error! Could not add the Strand.");
     }
 } else {
-    header("location:add.php?error=Error! Strand already exists.");
+    header("location:add.php?track=$track&error=Error! Strand already exists.");
 }
 
 ?>

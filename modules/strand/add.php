@@ -8,6 +8,7 @@ if (isset($_GET['message'])) {
     $alertType = 'danger'; // Set alert type to 'danger' for errors
 }
 
+$track = $_GET['track'];
 include "../../db_conn.php";
 ?>
 
@@ -16,7 +17,7 @@ include "../../db_conn.php";
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Strand</title>
+  <title>Add Strand on <?php echo $track; ?></title>
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
@@ -27,7 +28,7 @@ include "../../db_conn.php";
 
   <!-- Sidebar -->
   <?php 
-  $page = 'Strand'; 
+$page = "Strand/$track";
   include "../../navbar.php"; 
   $teachers_query = mysqli_query($conn, "
 SELECT id, CONCAT(first_name, ' ', last_name) AS full_name 
@@ -74,15 +75,15 @@ if (alert) {
       <form action="create.php" method="POST">
 
         <div class="row mb-3">
-          <h3 class="mb-3">Subject Information</h3>
+          <h3 class="mb-3">Strand Information</h3>
           
           <div class="col-md-6 mb-3">
-            <label for="strand_name" class="form-label required">Strand/Track Name</label>
+            <label for="strand_name" class="form-label required">Strand Name</label>
             <input type="text" class="form-control" id="strand_name" name="strand_name" required>
           </div>
        
           <div class="col-md-6 mb-3">
-            <label for="strand_code" class="form-label required">Strand/Track Code</label>
+            <label for="strand_code" class="form-label required">Strand Code</label>
             <input type="text" class="form-control" id="strand_code" name="strand_code" required>
           </div>
 
@@ -99,6 +100,11 @@ if (alert) {
           </div>
 
           <div class="col-md-6 mb-3">
+            <label for="track" class="form-label required">Track Name</label>
+            <input type="text" class="form-control" id="track" name="track" value="<?php echo $track; ?>" readonly>
+          </div>
+
+          <div class="col-md-12 mb-3">
             <label for="details" class="form-label required">Strand/Track Details</label>
             <textarea type="text" class="form-control" id="details" name="details" required></textarea>
           </div>
@@ -107,9 +113,7 @@ if (alert) {
 
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Submit</button>
-          <a href="./" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Cancel
-          </a>
+          <a href="./?track=<?php echo $track;?>" class="btn btn-secondary"></i> Cancel</a>
         </div>
       </form>
     </div>
