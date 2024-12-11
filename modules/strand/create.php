@@ -10,7 +10,7 @@ $track = $_POST['track'];
 $details = $_POST['details'];
 
 // Check if the teacher already exists (based on email or ID)
-$check_query = mysqli_query($conn, "SELECT * FROM `strand` WHERE code = '$strand_name' OR `name` = '$strand_code' AND del_status != 'deleted'");
+$check_query = mysqli_query($conn, "SELECT * FROM `strand` WHERE code = '$strand_name' AND del_status != 'deleted'");
 
 $existing = null; 
 while ($row = mysqli_fetch_array($check_query)) {

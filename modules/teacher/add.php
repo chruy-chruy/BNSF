@@ -70,7 +70,7 @@ if (alert) {
           <h3 class="mb-3">Teacher Information</h3>
           <div class="col-md-6">
             <label for="id_number" class="form-label required">ID Number</label>
-            <input type="text" class="form-control" id="id_number" name="id_number" required>
+            <input type="number" class="form-control" id="id_number" name="id_number" required>
           </div>
           <div class="col-md-6">
             <label for="last_name" class="form-label required">Last Name</label>
@@ -135,8 +135,7 @@ if (alert) {
 
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Submit</button>
-          <a href="./" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Cancel
+          <a href="./" class="btn btn-secondary"> Cancel
           </a>
         </div>
       </form>

@@ -7,6 +7,7 @@ if (isset($_GET['message'])) {
     $message = $_GET['error'];
     $alertType = 'danger'; // Set alert type to 'danger' for errors
 }
+$grade = $_GET['grade'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +25,7 @@ if (isset($_GET['message'])) {
 </head>
 <body>
 <?php 
-$page = 'Student'; // For active page indicator in sidebar
+$page = "Student/$grade"; // For active page indicator in sidebar
 include "../../db_conn.php"; // Include database connection
 
 // Get the student ID from the URL
@@ -96,7 +97,7 @@ if (alert) {
 <div class="container my-5">
   <h1 class="text-center mb-4">View Student</h1>
 <!-- Back Button -->
-  <a href="index.php" class="btn btn-secondary mb-3">
+  <a href="index.php?grade=<?php echo $grade ?>" class="btn btn-secondary mb-3">
     <i class="bi bi-arrow-left"></i> Back
   </a>
   <form action="update.php?id=<?php echo $student['id']; ?>" method="POST">
@@ -132,17 +133,6 @@ if (alert) {
     <!-- Strand and Gender -->
     <div class="row mb-3">
       <div class="col-md-6">
-        <label for="strand" class="form-label required">Strand</label>
-        <select class="form-select" id="strand" name="strand" required>
-          <option hidden value="<?php echo $student['strand']; ?>"><?php echo $student['strand_name']; ?></option>
-          <?php while($strand = mysqli_fetch_assoc($strand_query)): ?>
-                            <option value="<?php echo $strand['id']; ?>">               
-                              <?php echo $strand['name']; ?>     
-                            </option>
-                        <?php endwhile; ?>
-        </select>
-      </div>
-      <div class="col-md-6">
         <label for="gender" class="form-label required">Gender</label>
         <select class="form-select" id="gender" name="gender" required>
           <option hidden value="<?php echo $student['gender']; ?>"><?php echo $student['gender']; ?></option>
@@ -150,21 +140,22 @@ if (alert) {
           <option value="Female">Female</option>
         </select>
       </div>
-    </div>
-
-    <!-- Age, Nationality, and Birthday -->
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <label for="age" class="form-label required">Age</label>
-        <input type="number" class="form-control" id="age" name="age" required
-        value="<?php echo $student['age']; ?>">
-      </div>
-      <div class="col-md-4">
+      <div class="col-md-6">
         <label for="nationality" class="form-label required">Nationality</label>
         <input type="text" class="form-control" id="nationality" name="nationality" required
         value="<?php echo $student['nationality']; ?>">
       </div>
-      <div class="col-md-4">
+    </div>
+
+    <!-- Age, Nationality, and Birthday -->
+    <div class="row mb-3">
+    <div class="col-md-6">
+        <label for="age" class="form-label required">Age</label>
+        <input readonly type="number" class="form-control" id="age" name="age" required
+        value="<?php echo $student['age']; ?>">
+      </div>
+      
+      <div class="col-md-6">
         <label for="birthday" class="form-label required">Birthday</label>
         <input type="date" class="form-control" id="birthday" name="birthday" required
         value="<?php echo $student['birthday']; ?>">
@@ -190,6 +181,27 @@ if (alert) {
         <input type="email" class="form-control" id="email" name="email" required
         value="<?php echo $student['email']; ?>">
       </div>
+    </div>
+    <h3 class="mb-3">Educational Information</h3>
+    <div class="row mb-3">
+
+      <div class="col-md-6">
+        <label for="strand" class="form-label required">Strand</label>
+        <select class="form-select" id="strand" name="strand" required>
+          <option hidden value="<?php echo $student['strand']; ?>"><?php echo $student['strand_name']; ?></option>
+          <?php while($strand = mysqli_fetch_assoc($strand_query)): ?>
+                            <option value="<?php echo $strand['id']; ?>">               
+                              <?php echo $strand['name']; ?>     
+                            </option>
+                        <?php endwhile; ?>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+            <label for="grade_level" class="form-label required">Grade Level</label>
+            <input type="text" class="form-control" id="grade_level" name="grade_level" value="<?php echo $student['grade_level']; ?>" readonly>
+      </div>
+
     </div>
 
     <!-- Parent Information -->
@@ -263,7 +275,7 @@ document.getElementById('lrn').addEventListener('input', function() {
 document.getElementById('deleteButton').addEventListener('click', function() {
     const confirmed = confirm('Are you sure you want to delete this student?');
     if (confirmed) {
-        window.location.href = 'delete.php?id=<?php echo $student['id']; ?>'; // Redirect to delete page
+        window.location.href = 'delete.php?id=<?php echo $student['id']; ?>&grade=<?php echo $student['grade_level']; ?>'; // Redirect to delete page
     }
 });
 </script>

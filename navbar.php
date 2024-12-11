@@ -32,7 +32,15 @@ $nav_row = mysqli_fetch_array($nav_query);
     </ul>
 </div>
 
-<a href="../Student" class="<?php if ($page == 'Student') {echo 'active';} ?>"><i class="bi bi-person-lines-fill"></i> Student</a>
+<!-- <a href="../Student" class="<?php if ($page == 'Student') {echo 'active';} ?>"><i class="bi bi-person-lines-fill"></i> Student</a> -->
+<div class="submenu">
+    <a href="#" class="<?php if ($page == 'Student/11' || $page == 'Student/12') {echo 'active';} ?>"><i class="bi bi-person-lines-fill"></i> Student</a>
+    <ul>
+        <li><a href="../Student?grade=11" class="<?php if ($page == 'Student/11') {echo 'active';} ?>"><i class="bi bi-people-fill"></i> Grade 11</a></li>
+        <li><a href="../Student?grade=12" class="<?php if ($page == 'Student/12') {echo 'active';} ?>"><i class="bi bi-people-fill"></i> Grade 12</a></li>
+    </ul>
+</div>
+
 <a href="../schedule" class="<?php if ($page == 'Schedule') {echo 'active';} ?>"><i class="bi bi-calendar-event"></i> Schedule</a>
 <a href="../grades" class="<?php if ($page == 'Grades') {echo 'active';} ?>"><i class="bi bi-bar-chart"></i> Grade</a>
 

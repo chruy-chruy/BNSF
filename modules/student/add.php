@@ -7,6 +7,7 @@ if (isset($_GET['message'])) {
     $message = $_GET['error'];
     $alertType = 'danger'; // Set alert type to 'danger' for errors
 }
+$grade = $_GET['grade'];
 ?>
 
 <!DOCTYPE html>
@@ -21,12 +22,62 @@ if (isset($_GET['message'])) {
   <!-- style -->
    <link rel="stylesheet" href="../../assets/css/styles.css">
 
+   <style>
+.dropbtn {
+  background-color: #198754;
+  color: white;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+}
+
+
+#myInput {
+  box-sizing: border-box;
+  background-image: url('searchicon.png');
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#myInput:focus {outline: 3px solid #ddd;}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+</style>
 </head>
 <body>
 
   <!-- Sidebar -->
   <?php 
-  $page = 'Student'; 
+$page = "Student/$grade";
   include "../../navbar.php"; 
   include "../../db_conn.php";
   $strand_query = mysqli_query($conn, "SELECT * FROM strand WHERE del_status != 'deleted'");
@@ -66,6 +117,75 @@ if (alert) {
 }
 </script>
       <h1 class="text-center mb-4">Student Registration</h1>
+      <?php if($grade == "12"){ ?>
+<!-- Add Student Dropdown Button -->
+<div class="dropdown mb-3">
+  <div class="dropdown">
+  <button onclick="myFunction()" class="dropbtn btn btn-success dropdown-toggle">Existing Grade 11</button>
+  <?php
+    // Query to fetch student data
+    $query = "SELECT s.*, CONCAT(t.name) AS strand_name 
+    FROM student s 
+    LEFT JOIN strand t ON s.strand = t.id 
+    WHERE s.del_status != 'deleted' AND s.grade_level = '11'
+    ORDER BY s.id DESC;";
+    $result = mysqli_query($conn, $query);
+    ?>
+  <div id="myDropdown" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <a href="add.php?grade=12">None</a>
+    <?php 
+        // Loop through each row from the query result and populate the table
+        while($row = mysqli_fetch_assoc($result)) {
+            $id = $row['id'];
+            $full_name = $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name'];
+            $gender = $row['gender'];
+            $Email = $row['email'];
+            $strand = $row['strand_name'];
+        ?>
+    <a href="add.php?grade=12&student=<?php echo $id; ?>"><?php echo $full_name; ?></a>
+    <?php } ?>
+  </div>
+</div>
+
+<script>
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+function filterFunction() {
+  const input = document.getElementById("myInput");
+  const filter = input.value.toUpperCase();
+  const div = document.getElementById("myDropdown");
+  const a = div.getElementsByTagName("a");
+  for (let i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+</script>
+</div>
+
+<?php }?>
+
+<?php
+if (isset($_GET['student'])){
+  $id2 = $_GET['student'];
+    // Query to fetch student data
+    $query2 = "SELECT s.*, CONCAT(t.name) AS strand_name 
+    FROM student s 
+    LEFT JOIN strand t ON s.strand = t.id 
+    WHERE s.del_status != 'deleted' AND s.grade_level = '11' AND s.id = '$id2'";
+    $result2 = mysqli_query($conn, $query2);
+    $row = mysqli_fetch_assoc($result2);
+}
+?>
 
       <form action="create.php" method="POST">
 
@@ -73,75 +193,96 @@ if (alert) {
           <h3 class="mb-3">Personal Information</h3>
           <div class="col-md-6">
             <label for="lrn" class="form-label required">LRN</label>
-            <input type="text" class="form-control" id="lrn" name="lrn" required>
+            <input type="text" class="form-control" name="lrn" id="lrn" pattern="\d{13}" title="LRN must be exactly 13 digits" maxlength="13" value="<?php if (isset($_GET['student'])){ echo $row['lrn']; } ?>" required>
+            <script>document.getElementById('lrn').addEventListener('input', function (e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 13); // Allows only numbers, max 13 digits
+});</script>
           </div>
           <div class="col-md-6">
             <label for="last_name" class="form-label required">Last Name</label>
-            <input type="text" class="form-control" id="last_name" name="last_name" required>
+            <input type="text" class="form-control" id="last_name" name="last_name" value="<?php if (isset($_GET['student'])){ echo $row['last_name']; } ?>" required>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="middle_name" class="form-label">Middle Name</label>
-            <input type="text" class="form-control" id="middle_name" name="middle_name">
+            <input type="text" class="form-control" id="middle_name" value="<?php if (isset($_GET['student'])){ echo $row['middle_name']; } ?>" name="middle_name">
           </div>
           <div class="col-md-6">
             <label for="first_name" class="form-label required">First Name</label>
-            <input type="text" class="form-control" id="first_name" name="first_name" required>
+            <input type="text" class="form-control" id="first_name" name="first_name" value="<?php if (isset($_GET['student'])){ echo $row['first_name']; } ?>" required>
           </div>
         </div>
+        <div class="row mb-3">
+          <!-- Gender -->
+          <div class="col-md-4">
+            <label for="gender" class="form-label required">Gender</label>
+            <select class="form-select" id="gender" name="gender" required>
+              <option value="<?php if (isset($_GET['student'])){ echo $row['gender']; } ?>"><?php if (isset($_GET['student'])){ echo $row['gender']; }else { echo "Select"; } ?></option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="birthday" class="form-label required">Birthday</label>
+            <input type="date" class="form-control" id="birthday" name="birthday" value="<?php if (isset($_GET['student'])){ echo $row['birthday']; } ?>" required>
+          </div>
+
+          <div class="col-md-4">
+            <label for="nationality" class="form-label required">Nationality</label>
+            <input type="text" class="form-control" id="nationality" name="nationality" value="<?php if (isset($_GET['student'])){ echo $row['nationality']; } ?>" required>
+          </div>
+        </div>
+       
+        <div class="row mb-3">
+          <!-- <div class="col-md-4">
+            <label for="age" class="form-label required">Age</label>
+            <input type="number" class="form-control" id="age" name="age" required>
+          </div> -->
 
         <!-- Strand -->
-        <div class="row mb-3">
           <div class="col-md-6">
             <label for="strand" class="form-label required">Strand</label>
             <select class="form-select" id="strand" name="strand" required>
-              <option value="" hidden>Select</option>
+              <option value="<?php if (isset($_GET['student'])){ echo $row['strand']; } ?>" hidden>
+              <?php if (isset($_GET['student'])){
+                $strandId = $row['strand'];
+                $strand_query2 = mysqli_query($conn, "SELECT * FROM strand WHERE del_status != 'deleted' AND id = '$strandId'");
+                while ($strand2 = mysqli_fetch_assoc($strand_query2)){
+                  echo $strand2['name']; 
+              }
+            }
+              else { echo "Select"; }?>
+              </option>
               <?php while ($strand = mysqli_fetch_assoc($strand_query)): ?> 
                             <option value="<?php echo $strand['id']; ?>"> <?php echo $strand['name']; ?> </option>       
               <?php endwhile; ?>  
             </select>
           </div>
-          <!-- Gender -->
-          <div class="col-md-6">
-            <label for="gender" class="form-label required">Gender</label>
-            <select class="form-select" id="gender" name="gender" required>
-              <option value="">Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="row mb-3">
-          <div class="col-md-4">
-            <label for="age" class="form-label required">Age</label>
-            <input type="number" class="form-control" id="age" name="age" required>
+        <!-- Grade -->
+        <div class="col-md-6">
+            <label for="grade_level" class="form-label required">Grade Level</label>
+            <input type="text" class="form-control" id="grade_level" name="grade_level" value="<?php echo $grade; ?>" readonly>
           </div>
-          <div class="col-md-4">
-            <label for="nationality" class="form-label required">Nationality</label>
-            <input type="text" class="form-control" id="nationality" name="nationality" required>
-          </div>
-          <div class="col-md-4">
-            <label for="birthday" class="form-label required">Birthday</label>
-            <input type="date" class="form-control" id="birthday" name="birthday" required>
-          </div>
+
         </div>
 
         <div class="mb-3">
           <label for="address" class="form-label required">Address</label>
-          <input type="text" class="form-control" id="address" name="address" required>
+          <input type="text" class="form-control" id="address" name="address" value="<?php if (isset($_GET['student'])){ echo $row['address']; } ?>" required>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="contact" class="form-label required">Contact</label>
-            <input type="text" class="form-control" id="contact" name="contact" required>
+            <input type="text" class="form-control" id="contact" name="contact" value="<?php if (isset($_GET['student'])){ echo $row['contact']; } ?>" required>
           </div>
           <div class="col-md-6">
             <label for="email" class="form-label required">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+            <input type="email" class="form-control" id="email" name="email" value="<?php if (isset($_GET['student'])){ echo $row['email']; } ?>" required>
           </div>
         </div>
 
@@ -150,22 +291,22 @@ if (alert) {
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="mothers_name" class="form-label required">Mother's Name</label>
-            <input type="text" class="form-control" id="mothers_name" name="mothers_name" required>
+            <input type="text" class="form-control" id="mothers_name" name="mothers_name" value="<?php if (isset($_GET['student'])){ echo $row['mothers_name']; } ?>" required>
           </div>
           <div class="col-md-6">
             <label for="mothers_occupation" class="form-label">Mother's Occupation</label>
-            <input type="text" class="form-control" id="mothers_occupation" name="mothers_occupation">
+            <input type="text" class="form-control" id="mothers_occupation" name="mothers_occupation" value="<?php if (isset($_GET['student'])){ echo $row['mothers_occupation']; } ?>">
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="fathers_name" class="form-label required">Father's Name</label>
-            <input type="text" class="form-control" id="fathers_name" name="fathers_name" required>
+            <input type="text" class="form-control" id="fathers_name" name="fathers_name" value="<?php if (isset($_GET['student'])){ echo $row['fathers_name']; } ?>" required>
           </div>
           <div class="col-md-6">
             <label for="fathers_occupation" class="form-label">Father's Occupation</label>
-            <input type="text" class="form-control" id="fathers_occupation" name="fathers_occupation">
+            <input type="text" class="form-control" id="fathers_occupation" name="fathers_occupation" value="<?php if (isset($_GET['student'])){ echo $row['fathers_occupation']; } ?>">
           </div>
         </div>
 
@@ -173,17 +314,17 @@ if (alert) {
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="username" class="form-label required">Username</label>
-            <input type="text" class="form-control" id="username" name="username" required readonly>
+            <input type="text" class="form-control" id="username" name="username" required value="<?php if (isset($_GET['student'])){ echo $row['username']; } ?>" readonly>
           </div>
           <div class="col-md-6">
             <label for="password" class="form-label required">Password</label>
-            <input type="text" class="form-control" id="password" name="password" readonly>
+            <input type="text" class="form-control" id="password" name="password" value="<?php if (isset($_GET['student'])){ echo $row['password']; } ?>" readonly>
           </div>
         </div>
 
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Submit</button>
-          <a href="./" class="btn btn-secondary">
+          <a href="./?grade=<?php echo $grade ?>" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Cancel
           </a>
         </div>
@@ -218,3 +359,8 @@ if (alert) {
   </script>
 </body>
 </html>
+
+<script src="../../assets/js/DataTables/jquery.min.js"></script>
+<script src="../../assets/js/DataTables/jquery.dataTables.min.js"></script>
+<script src="../../assets/js/DataTables/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>

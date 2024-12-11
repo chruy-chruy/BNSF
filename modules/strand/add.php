@@ -83,7 +83,7 @@ if (alert) {
           </div>
        
           <div class="col-md-6 mb-3">
-            <label for="strand_code" class="form-label required">Strand Code</label>
+            <label for="strand_code" class="form-label required">Strand Section</label>
             <input type="text" class="form-control" id="strand_code" name="strand_code" required>
           </div>
 
@@ -105,7 +105,7 @@ if (alert) {
           </div>
 
           <div class="col-md-12 mb-3">
-            <label for="details" class="form-label required">Strand/Track Details</label>
+            <label for="details" class="form-label required">Strand Details</label>
             <textarea type="text" class="form-control" id="details" name="details" required></textarea>
           </div>
         </div>

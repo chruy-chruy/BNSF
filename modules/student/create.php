@@ -8,9 +8,12 @@ $first_name = ucwords(mysqli_real_escape_string($conn, $_POST['first_name']));
 $middle_name = ucwords(mysqli_real_escape_string($conn, $_POST['middle_name']));
 $last_name = ucwords(mysqli_real_escape_string($conn, $_POST['last_name']));
 $gender = mysqli_real_escape_string($conn, $_POST['gender']);
-$age = mysqli_real_escape_string($conn, $_POST['age']);
+// $age = mysqli_real_escape_string($conn, $_POST['age']);
 $nationality = mysqli_real_escape_string($conn, $_POST['nationality']);
-$birthday = mysqli_real_escape_string($conn, $_POST['birthday']);
+$birthday = $_POST['birthday']; // Assuming format: YYYY-MM-DD
+$birthdate2 = new DateTime($birthday); // Convert to DateTime
+$currentDate = new DateTime(); // Get the current date
+$age = $currentDate->diff($birthdate2)->y; // Calculate the age in years
 $address = mysqli_real_escape_string($conn, $_POST['address']);
 $contact = mysqli_real_escape_string($conn, $_POST['contact']);
 $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -21,11 +24,13 @@ $fathers_occupation = ucwords(mysqli_real_escape_string($conn, $_POST['fathers_o
 $strand = mysqli_real_escape_string($conn, $_POST['strand']);
 $username = mysqli_real_escape_string($conn, $_POST['username']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
+$grade_level = mysqli_real_escape_string($conn, $_POST['grade_level']);
 
 // Check if the student already exists
 $squery = mysqli_query($conn, "SELECT * FROM student WHERE 
-    lrn = '$lrn' OR
+    lrn = '$lrn' AND
     email = '$email' AND 
+    grade_level = $grade_level AND
     del_status != 'deleted'");
 
 $check = null; // Initialize check variable
@@ -55,6 +60,7 @@ if (empty($check)) {
         `strand`,
         `username`,
         `password`,
+        `grade_level`,
         `del_status`
     ) VALUES (
         '$lrn',
@@ -75,15 +81,16 @@ if (empty($check)) {
         '$strand',
         '$username',
         '$password',
+        '$grade_level',
         'active')";
 
     // Execute the query
     if (mysqli_query($conn, $sql2)) {
-        header("location:index.php?message=Success! New student has been added successfully.");
+        header("location:index.php?message=Success! New student has been added successfully.&grade=$grade_level");
     } else {
-        header("location:add.php?error=Error! Could not insert the student.");
+        header("location:add.php?error=Error! Could not insert the student.&grade=$grade_level");
     }
 } else {
-    header("location:add.php?error=Error! Student already exists.");
+    header("location:add.php?error=Error! Student already exists.&grade=$grade_level");
 }
 ?>

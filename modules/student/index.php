@@ -7,6 +7,8 @@ if (isset($_GET['message'])) {
     $message = $_GET['error'];
     $alertType = 'danger'; // Set alert type to 'danger' for errors
 }
+
+$grade = $_GET['grade'];
 ?>
 
 <html lang="en">
@@ -25,7 +27,7 @@ if (isset($_GET['message'])) {
 <body>
 
 <?php 
-$page = 'Student';
+$page = "Student/$grade";
 include "../../db_conn.php"; 
 ?>
   
@@ -37,11 +39,12 @@ include "../../db_conn.php";
 
   <!-- Student Module -->
   <div id="studentSection">
-    <h1>Student Module</h1>
+    <h1>Student Module Grade <?php echo $grade ?></h1>
     <p>Manage the list of students here.</p>
 
     <!-- Add Student Button -->
-<a href="add.php" class="btn btn-success mb-3">Add Student</a>
+<a href="add.php?grade=<?php echo $grade;?>" class="btn btn-success mb-3">Add Student</a>
+
 <div class="container mt-4">
 
 <?php if (isset($message)): ?>
@@ -80,7 +83,7 @@ if (alert) {
     $query = "SELECT s.*, CONCAT(t.name) AS strand_name 
     FROM student s 
     LEFT JOIN strand t ON s.strand = t.id 
-    WHERE s.del_status != 'deleted'
+    WHERE s.del_status != 'deleted' AND s.grade_level = $grade
     ORDER BY s.id DESC;";
     $result = mysqli_query($conn, $query);
     ?>
@@ -113,7 +116,7 @@ if (alert) {
           <td><?php echo $Email; ?></td>
           <td><?php echo $strand; ?></td>
           <td class="text-end">
-            <a href="view.php?id=<?php echo $id; ?>" class="btn btn-info btn-sm">View</a>
+            <a href="view.php?id=<?php echo $id; ?>&grade=<?php echo $grade;?>" class="btn btn-info btn-sm">View</a>
           </td>
         </tr>
         <?php } ?>

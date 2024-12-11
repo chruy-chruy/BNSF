@@ -11,9 +11,11 @@ $first_name = ucwords(mysqli_real_escape_string($conn, $_POST['first_name']));
 $middle_name = ucwords(mysqli_real_escape_string($conn, $_POST['middle_name']));
 $last_name = ucwords(mysqli_real_escape_string($conn, $_POST['last_name']));
 $gender = mysqli_real_escape_string($conn, $_POST['gender']);
-$age = mysqli_real_escape_string($conn, $_POST['age']);
 $nationality = mysqli_real_escape_string($conn, $_POST['nationality']);
-$birthday = mysqli_real_escape_string($conn, $_POST['birthday']);
+$birthday = $_POST['birthday']; // Assuming format: YYYY-MM-DD
+$birthdate2 = new DateTime($birthday); // Convert to DateTime
+$currentDate = new DateTime(); // Get the current date
+$age = $currentDate->diff($birthdate2)->y; // Calculate the age in years
 $address = mysqli_real_escape_string($conn, $_POST['address']);
 $contact = mysqli_real_escape_string($conn, $_POST['contact']);
 $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -24,6 +26,7 @@ $fathers_occupation = ucwords(mysqli_real_escape_string($conn, $_POST['fathers_o
 $strand = mysqli_real_escape_string($conn, $_POST['strand']);
 $username = mysqli_real_escape_string($conn, $_POST['username']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
+$grade_level = mysqli_real_escape_string($conn, $_POST['grade_level']);
 
 // Check if another student with the same LRN or email already exists (excluding the current student)
 $squery = mysqli_query($conn, "SELECT * FROM student WHERE 
@@ -57,16 +60,17 @@ if (empty($check)) {
         `fathers_occupation` = '$fathers_occupation',
         `strand` = '$strand',
         `username` = '$username',
+        `grade_level` = '$grade_level',
         `password` = '$password'
     WHERE id = '$id'";
 
     // Execute the query
     if (mysqli_query($conn, $sql2)) {
-        header("location:view.php?id=$id&message=Success! Student details have been updated successfully.");
+        header("location:view.php?id=$id&message=Success! Student details have been updated successfully.&grade=$grade_level");
     } else {
-        header("location:view.php?id=$id&error=Error! Could not update the student details.");
+        header("location:view.php?id=$id&error=Error! Could not update the student details.&grade=$grade_level");
     }
 } else {
-    header("location:view.php?id=$id&error=Error! Another student with the same LRN or email already exists.");
+    header("location:view.php?id=$id&error=Error! Another student with the same LRN or email already exists.&grade=$grade_level");
 }
 ?>
