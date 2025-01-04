@@ -25,7 +25,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     } else if (empty($pass)) {
         header("Location: index.php?error=Password is required.");
         exit();
-    } else if($role == "registrar") {
+    } else if($uname == "admin") {
         $sql = "SELECT * FROM user WHERE username='$uname' AND password='$pass'";
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0) {
@@ -59,11 +59,11 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 exit();
             }
             else{
-                header("Location: index.php?error=Incorrect username or password.");
+                header("Location: index.php?error=Incorrect username or password.&role=$role");
             exit();
             }
         } else {
-            header("Location: index.php?error=Incorrect username or password.");
+            header("Location: index.php?error=Incorrect username or password.&role=$role");
             exit();
         }
     }else if($role == "teacher") {
@@ -79,11 +79,11 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 exit();
             }
             else{
-                header("Location: index.php?error=Incorrect username or password.");
+                header("Location: index.php?error=Incorrect username or password.&role=$role");
             exit();
             }
         } else {
-            header("Location: index.php?error=server error.");
+            header("Location: index.php?error=server error.&role=$role");
             exit();
         }
     }
@@ -100,11 +100,11 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 exit();
             }
             else{
-                header("Location: index.php?error=Incorrect username or password.");
+                header("Location: index.php?error=Incorrect username or password.&role=$role");
             exit();
             }
         } else {
-            header("Location: index.php?error=Incorrect username or password.");
+            header("Location: index.php?error=Incorrect username or password.&role=$role");
             exit();
         }
     }
