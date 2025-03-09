@@ -30,7 +30,7 @@ $grade_level = mysqli_real_escape_string($conn, $_POST['grade_level']);
 
 // Check if another student with the same LRN or email already exists (excluding the current student)
 $squery = mysqli_query($conn, "SELECT * FROM student WHERE 
-    (lrn = '$lrn' OR email = '$email') AND 
+    (lrn = '$lrn') AND 
     id != '$id' AND 
     del_status != 'deleted'");
 

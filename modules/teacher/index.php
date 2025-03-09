@@ -19,6 +19,8 @@ if (isset($_GET['message'])) {
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
   <!-- style -->
    <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
+
 </head>
 <body>
 <?php 
@@ -43,7 +45,7 @@ include "../../db_conn.php";
 
 <?php if (isset($message)): ?>
 <!-- Bootstrap 5 Alert -->
-<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show position-absolute top-0 start-50 translate-middle-x custom-alert" role="alert">
     <?php echo $message; ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>

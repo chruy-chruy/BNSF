@@ -21,6 +21,7 @@ $grade = $_GET['grade'];
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
   <!-- style -->
    <link rel="stylesheet" href="../../assets/css/styles.css">
+   <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
 
    <style>
 .dropbtn {
@@ -90,7 +91,7 @@ $page = "Student/$grade";
 
 <?php if (isset($message)): ?>
 <!-- Bootstrap 5 Alert -->
-<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show position-absolute top-0 start-50 translate-middle-x custom-alert" role="alert">
     <?php echo $message; ?>
 </div>
 <?php endif; ?>
@@ -187,7 +188,7 @@ if (isset($_GET['student'])){
 }
 ?>
 
-      <form action="create.php" method="POST">
+      <form action="create.php?<?php if (isset($_GET['student'])){ echo "student=" . $_GET['student']; } ?>" method="POST">
 
         <div class="row mb-3">
           <h3 class="mb-3">Personal Information</h3>
@@ -200,18 +201,24 @@ if (isset($_GET['student'])){
           </div>
           <div class="col-md-6">
             <label for="last_name" class="form-label required">Last Name</label>
-            <input type="text" class="form-control" id="last_name" name="last_name" value="<?php if (isset($_GET['student'])){ echo $row['last_name']; } ?>" required>
+            <input type="text" class="form-control" id="last_name" name="last_name" value="<?php if (isset($_GET['student'])){ echo $row['last_name']; } ?>" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="middle_name" class="form-label">Middle Name</label>
-            <input type="text" class="form-control" id="middle_name" value="<?php if (isset($_GET['student'])){ echo $row['middle_name']; } ?>" name="middle_name">
+            <input type="text" class="form-control" id="middle_name" value="<?php if (isset($_GET['student'])){ echo $row['middle_name']; } ?>" name="middle_name"
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
           </div>
           <div class="col-md-6">
             <label for="first_name" class="form-label required">First Name</label>
-            <input type="text" class="form-control" id="first_name" name="first_name" value="<?php if (isset($_GET['student'])){ echo $row['first_name']; } ?>" required>
+            <input type="text" class="form-control" id="first_name" name="first_name" value="<?php if (isset($_GET['student'])){ echo $row['first_name']; } ?>" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
           </div>
         </div>
         <div class="row mb-3">
@@ -243,7 +250,7 @@ if (isset($_GET['student'])){
           </div> -->
 
         <!-- Strand -->
-          <div class="col-md-6">
+          <!-- <div class="col-md-6">
             <label for="strand" class="form-label required">Strand</label>
             <select class="form-select" id="strand" name="strand" required>
               <option value="<?php if (isset($_GET['student'])){ echo $row['strand']; } ?>" hidden>
@@ -260,16 +267,46 @@ if (isset($_GET['student'])){
                             <option value="<?php echo $strand['id']; ?>"> <?php echo $strand['name']; ?> </option>       
               <?php endwhile; ?>  
             </select>
-          </div>
-
-        <!-- Grade -->
-        <div class="col-md-6">
+          </div> -->
+          
+          <!-- Grade -->
+          <div class="col-md-12">
             <label for="grade_level" class="form-label required">Grade Level</label>
             <input type="text" class="form-control" id="grade_level" name="grade_level" value="<?php echo $grade; ?>" readonly>
           </div>
+                <!-- fetch the strand names -->
+          <!-- <?php if (isset($_GET['student'])){
+                $strand11 = $student['grade_11'];
+                $strand12 = $student['grade_12'];
+                $grade11;
+                $grade12;
+                $strand_query2 = mysqli_query($conn, "SELECT * FROM strand WHERE del_status != 'deleted' AND id = '$strand11'");
+                while ($strand2 = mysqli_fetch_assoc($strand_query2)){
+                  $grade11 = $strand2['name'];
+                  $strand11_id = $strand2['id'];
+              }$strand_query3 = mysqli_query($conn, "SELECT * FROM strand WHERE del_status != 'deleted' AND id = '$strand12'");
+              while ($strand3 = mysqli_fetch_assoc($strand_query3)){
+                $grade12 = $strand3['name'];
+                $strand12_id = $strand3['id'];
+            }
+            }
+            ?> -->
+
+          <!-- <div class="col-md-3">
+            <label for="grade_level" class="form-label required">Grade 11 Strand</label>
+            <input type="text" class="form-control" id="grade_level" name="" value="<?php if (isset($grade11)){ echo $grade11; }else{ echo "N/A";} ?>" readonly >
+          </div>
+
+          
+          <div class="col-md-3">
+            <label for="grade_level" class="form-label required">Grade 12 Strand</label>
+            <input type="text" class="form-control" id="grade_level" name="" value="<?php if (isset($grade12)){ echo $grade12; }else{ echo "N/A";} ?>" readonly>
+            <input type="text" class="form-control" id="grade_level" name="grade_12" value="<?php if (isset($grade12)){ echo $grade12; }else{ echo "N/A";} ?>" readonly hidden>
+          </div> -->
+
+
 
         </div>
-
         <div class="mb-3">
           <label for="address" class="form-label required">Address</label>
           <input type="text" class="form-control" id="address" name="address" value="<?php if (isset($_GET['student'])){ echo $row['address']; } ?>" required>
@@ -280,6 +317,11 @@ if (isset($_GET['student'])){
             <label for="contact" class="form-label required">Contact</label>
             <input type="text" class="form-control" id="contact" name="contact" value="<?php if (isset($_GET['student'])){ echo $row['contact']; } ?>" required>
           </div>
+
+          <script>document.getElementById('contact').addEventListener('input', function (e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 11); // Allows only numbers, max 13 digits
+});</script>
+
           <div class="col-md-6">
             <label for="email" class="form-label required">Email</label>
             <input type="email" class="form-control" id="email" name="email" value="<?php if (isset($_GET['student'])){ echo $row['email']; } ?>" required>
@@ -291,7 +333,9 @@ if (isset($_GET['student'])){
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="mothers_name" class="form-label required">Mother's Name</label>
-            <input type="text" class="form-control" id="mothers_name" name="mothers_name" value="<?php if (isset($_GET['student'])){ echo $row['mothers_name']; } ?>" required>
+            <input type="text" class="form-control" id="mothers_name" name="mothers_name" value="<?php if (isset($_GET['student'])){ echo $row['mothers_name']; } ?>" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
           </div>
           <div class="col-md-6">
             <label for="mothers_occupation" class="form-label">Mother's Occupation</label>
@@ -302,7 +346,9 @@ if (isset($_GET['student'])){
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="fathers_name" class="form-label required">Father's Name</label>
-            <input type="text" class="form-control" id="fathers_name" name="fathers_name" value="<?php if (isset($_GET['student'])){ echo $row['fathers_name']; } ?>" required>
+            <input type="text" class="form-control" id="fathers_name" name="fathers_name" value="<?php if (isset($_GET['student'])){ echo $row['fathers_name']; } ?>" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
           </div>
           <div class="col-md-6">
             <label for="fathers_occupation" class="form-label">Father's Occupation</label>
@@ -324,7 +370,7 @@ if (isset($_GET['student'])){
 
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Submit</button>
-          <a href="./?grade=<?php echo $grade ?>" class="btn btn-secondary">
+          <a href="student.php?grade=<?php echo $grade ?>" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Cancel
           </a>
         </div>

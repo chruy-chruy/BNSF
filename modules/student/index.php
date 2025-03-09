@@ -7,150 +7,74 @@ if (isset($_GET['message'])) {
     $message = $_GET['error'];
     $alertType = 'danger'; // Set alert type to 'danger' for errors
 }
-
-$grade = $_GET['grade'];
 ?>
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Module</title>
+  <title>Subject Module</title>
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
-  <!-- DataTables CSS -->
-  <link rel="stylesheet" href="../../assets/css/DataTables/jquery.dataTables.min.css">
   <!-- Custom Style -->
   <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
+  <style>
+    /* Box button design */
+    .btn-box {
+      display: block;
+      width: 200px; /* Fixed width for all buttons */
+      padding: 15px 0; /* Consistent padding */
+      font-size: 18px; /* Font size */
+      text-align: center; /* Center the text */
+      border: 2px solid #007bff; /* Border for box design */
+      border-radius: 8px; /* Rounded corners */
+      transition: all 0.3s ease; /* Smooth transition for hover effect */
+    }
+
+    /* Button color */
+    .btn-tvl {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn-academic {
+      background-color: #007bff;
+      color: white;
+    }
+
+    /* Hover effect */
+    .btn-box:hover {
+      transform: scale(1.05); /* Slightly scale up on hover */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Add shadow on hover */
+    }
+  </style>
 </head>
 <body>
-
 <?php 
-$page = "Student/$grade";
-include "../../db_conn.php"; 
+$page = 'Student';
+include "../../db_conn.php";
 ?>
-  
+
 <!-- Sidebar -->
-<?php include "../../navbar.php"; ?>
+<?php include "../../navbar.php";?>
 
-<!-- Main Content (Student Module with DataTable) -->
+<!-- Main Content (Schedule Module) -->
 <div class="content" id="content">
+  <h1>Student Module</h1>
+  <p>Manage the list of Student here.</p>
 
-  <!-- Student Module -->
-  <div id="studentSection">
-    <h1>Student Module Grade <?php echo $grade ?></h1>
-    <p>Manage the list of students here.</p>
-
-    <!-- Add Student Button -->
-<a href="add.php?grade=<?php echo $grade;?>" class="btn btn-success mb-3">Add Student</a>
-
-<div class="container mt-4">
-
-<?php if (isset($message)): ?>
-<!-- Bootstrap 5 Alert -->
-<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
-    <?php echo $message; ?>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<?php endif; ?>
-
-</div>
-
-<!-- Auto-dismiss alert after 3 seconds using simple JavaScript -->
-<script>
-// Select the alert element
-var alert = document.getElementById('autoDismissAlert');
-
-// Set timeout for 3 seconds (3000 ms)
-if (alert) {
-    setTimeout(function() {
-        // Fade out the alert (optional smooth fade out)
-        alert.style.transition = 'opacity 0.5s ease';
-        alert.style.opacity = '0';
-
-        // After fading out, remove the alert element from the DOM
-        setTimeout(function() {
-            alert.remove();
-        }, 500); // Remove after fade-out completes (500 ms)
-    }, 3000); // 3 seconds delay
-}
-</script>
-
-    <!-- Student Table with DataTable -->
-    <?php
-    // Query to fetch student data
-    $query = "SELECT s.*, CONCAT(t.name) AS strand_name 
-    FROM student s 
-    LEFT JOIN strand t ON s.strand = t.id 
-    WHERE s.del_status != 'deleted' AND s.grade_level = $grade
-    ORDER BY s.id DESC;";
-    $result = mysqli_query($conn, $query);
-    ?>
-
-    <table id="studentTable" class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Full Name</th>
-          <th>Gender</th>
-          <th>Email</th>
-          <th>Strand</th>
-          <th class="text-end">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php 
-        // Loop through each row from the query result and populate the table
-        while($row = mysqli_fetch_assoc($result)) {
-            $id = $row['id'];
-            $full_name = $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name'];
-            $gender = $row['gender'];
-            $Email = $row['email'];
-            $strand = $row['strand_name'];
-        ?>
-        <tr>
-          <td><?php echo $id; ?></td>
-          <td><?php echo $full_name; ?></td>
-          <td><?php echo $gender; ?></td>
-          <td><?php echo $Email; ?></td>
-          <td><?php echo $strand; ?></td>
-          <td class="text-end">
-            <a href="view.php?id=<?php echo $id; ?>&grade=<?php echo $grade;?>" class="btn btn-info btn-sm">View</a>
-          </td>
-        </tr>
-        <?php } ?>
-      </tbody>
-    </table>
-
-    <?php 
-    // Close the database connection
-    mysqli_close($conn);
-    ?>
+  <!-- Schedule Module -->
+  <div id="scheduleSection" class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+    <div class="text-center">
+      <!-- Button Container -->
+      <div class="d-flex justify-content-center gap-4">
+        <a href="student.php?grade=11" class="btn btn-tvl btn-box">Grade 11</a>
+        <a href="student.php?grade=12" class="btn btn-academic btn-box">Grade 12</a>
+      </div>
+    </div>
   </div>
-  </div>
-
-
-<script src="../../assets/js/DataTables/jquery.min.js"></script>
-<script src="../../assets/js/DataTables/jquery.dataTables.min.js"></script>
-<script src="../../assets/js/DataTables/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-  $(document).ready(function() {
-    // Initialize DataTable
-    $('#studentTable').DataTable({
-      responsive: true // Optional: Make the table responsive
-    });
-  });
-</script>
-
-<!-- Additional CSS for DataTables -->
-<style>
-  .dataTables_filter {
-    float: right; /* Moves the search bar to the right */
-  }
-</style>
-
+</div>
 </body>
 </html>

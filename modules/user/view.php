@@ -21,6 +21,8 @@ if (isset($_GET['message'])) {
   <!-- Custom CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
+
 </head>
 <body>
 <?php 

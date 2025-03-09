@@ -12,6 +12,8 @@ if (isset($_SESSION['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
+    
     <title>School System Login</title>
         <style>
         /* General Styles */

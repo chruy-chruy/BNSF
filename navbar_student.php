@@ -18,12 +18,12 @@ if (isset($_SESSION['id'])) {
 
 <div class="sidebar" id="sidebar">
     <div>
-      <img src="../../assets/img/logo.png" alt="Logo" class="logo">
+        <img src="../../assets/img/logo.png" alt="Logo" class="logo">
     </div>
-    <h6 class="text-center">Hello <?php echo $nav_row['first_name'] . " " . $nav_row['last_name'] ?>! </h6>
-<br>
-    <a href="../dashboard" class="<?php if ($page == 'Dashboard') {echo 'active';} ?>" >Dashboard</a>
-    <a href="../schedule" class="<?php if ($page == 'Schedule') {echo 'active';} ?>">My Schedule</a>
-    <a href="../subject" class="<?php if ($page == 'Subject') {echo 'active';} ?>">My Grades</a>
+    <h6 class="text-center">Hello <?php echo $nav_row['first_name'] . " " . $nav_row['last_name']; ?>! </h6>
+    <br>
+    <a href="../dashboard" class="<?php if ($page == 'Dashboard') { echo 'active'; } ?>">Dashboard</a>
+    <a href="../schedule" class="<?php if ($page == 'Schedule') { echo 'active'; } ?>">My Schedule</a>
+    <a href="../grade" class="<?php if ($page == 'Grades') { echo 'active'; } ?>">My Grades</a>
     <a href="../../logout.php">Logout</a>
-  </div>
+</div>

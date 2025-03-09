@@ -22,6 +22,8 @@ $grade = $_GET['grade'];
   <!-- Custom CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
+
 </head>
 <body>
 <?php 
@@ -65,7 +67,7 @@ $strand_query = mysqli_query($conn, "SELECT * FROM strand WHERE del_status != 'd
 
 <?php if (isset($message)): ?>
 <!-- Bootstrap 5 Alert -->
-<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show position-absolute top-0 start-50 translate-middle-x custom-alert" role="alert">
     <?php echo $message; ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
@@ -97,7 +99,7 @@ if (alert) {
 <div class="container my-5">
   <h1 class="text-center mb-4">View Student</h1>
 <!-- Back Button -->
-  <a href="index.php?grade=<?php echo $grade ?>" class="btn btn-secondary mb-3">
+  <a href="student.php?grade=<?php echo $grade ?>" class="btn btn-secondary mb-3">
     <i class="bi bi-arrow-left"></i> Back
   </a>
   <form action="update.php?id=<?php echo $student['id']; ?>" method="POST">
@@ -110,9 +112,15 @@ if (alert) {
         <input type="text" class="form-control" id="lrn" name="lrn" required 
         value="<?php echo $student['lrn']; ?>">
       </div>
+
+      <script>document.getElementById('lrn').addEventListener('input', function (e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 13); // Allows only numbers, max 13 digits
+});</script>
       <div class="col-md-6">
         <label for="last_name" class="form-label required">Last Name</label>
         <input type="text" class="form-control" id="last_name" name="last_name" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
         value="<?php echo $student['last_name']; ?>">
       </div>
     </div>
@@ -120,12 +128,16 @@ if (alert) {
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="middle_name" class="form-label">Middle Name</label>
-        <input type="text" class="form-control" id="middle_name" name="middle_name"
+        <input type="text" class="form-control" id="middle_name" name="middle_name" 
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
         value="<?php echo $student['middle_name']; ?>">
       </div>
       <div class="col-md-6">
         <label for="first_name" class="form-label required">First Name</label>
-        <input type="text" class="form-control" id="first_name" name="first_name" required
+        <input type="text" class="form-control" id="first_name" name="first_name" required 
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
         value="<?php echo $student['first_name']; ?>">
       </div>
     </div>
@@ -176,6 +188,9 @@ if (alert) {
         <input type="text" class="form-control" id="contact" name="contact" required
         value="<?php echo $student['contact']; ?>">
       </div>
+      <script>document.getElementById('contact').addEventListener('input', function (e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 11); // Allows only numbers, max 13 digits
+});</script>
       <div class="col-md-6">
         <label for="email" class="form-label required">Email</label>
         <input type="email" class="form-control" id="email" name="email" required
@@ -185,7 +200,7 @@ if (alert) {
     <h3 class="mb-3">Educational Information</h3>
     <div class="row mb-3">
 
-      <div class="col-md-6">
+      <!-- <div class="col-md-6">
         <label for="strand" class="form-label required">Strand</label>
         <select class="form-select" id="strand" name="strand" required>
           <option hidden value="<?php echo $student['strand']; ?>"><?php echo $student['strand_name']; ?></option>
@@ -195,12 +210,39 @@ if (alert) {
                             </option>
                         <?php endwhile; ?>
         </select>
-      </div>
+      </div> -->
 
       <div class="col-md-6">
             <label for="grade_level" class="form-label required">Grade Level</label>
             <input type="text" class="form-control" id="grade_level" name="grade_level" value="<?php echo $student['grade_level']; ?>" readonly>
       </div>
+                <!-- fetch the strand names -->
+                <?php if (isset($_GET['id'])){
+                $strand11 = $student['grade_11'];
+                $strand12 = $student['grade_12'];
+                $grade11;
+                $grade12;
+                $strand_query2 = mysqli_query($conn, "SELECT * FROM strand WHERE del_status != 'deleted' AND id = '$strand11'");
+                while ($strand2 = mysqli_fetch_assoc($strand_query2)){
+                  $grade11 = $strand2['name'];
+                  $strand11_id = $strand2['id'];
+              }$strand_query3 = mysqli_query($conn, "SELECT * FROM strand WHERE del_status != 'deleted' AND id = '$strand12'");
+              while ($strand3 = mysqli_fetch_assoc($strand_query3)){
+                $grade12 = $strand3['name'];
+                $strand12_id = $strand3['id'];
+            }
+            }
+            ?>
+          <div class="col-md-3">
+            <label for="grade_level" class="form-label required">Strand 11 Strand</label>
+            <input type="text" class="form-control" id="grade_level" name="" value="<?php if (isset($grade11)){ echo $grade11; }else{ echo "N/A";} ?>" readonly>
+            
+          </div>
+          <div class="col-md-3">
+            <label for="grade_level" class="form-label required">Strand 12 Strand</label>
+            <input type="text" class="form-control" id="grade_level" name="" value="<?php if (isset($grade12)){ echo $grade12; }else{ echo "N/A";} ?>" readonly>
+          </div>
+
 
     </div>
 
@@ -210,6 +252,8 @@ if (alert) {
       <div class="col-md-6">
         <label for="mothers_name" class="form-label required">Mother's Name</label>
         <input type="text" class="form-control" id="mothers_name" name="mothers_name" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
         value="<?php echo $student['mothers_name']; ?>">
       </div>
       <div class="col-md-6">
@@ -223,6 +267,8 @@ if (alert) {
       <div class="col-md-6">
         <label for="fathers_name" class="form-label required">Father's Name</label>
         <input type="text" class="form-control" id="fathers_name" name="fathers_name" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
         value="<?php echo $student['fathers_name']; ?>">
       </div>
       <div class="col-md-6">

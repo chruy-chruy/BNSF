@@ -18,6 +18,8 @@ $track = $_GET['track'];
 
   <!-- Bootstrap 5 CSS -->
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
+
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
@@ -58,7 +60,7 @@ WHERE id NOT IN (SELECT teacher_id FROM strand WHERE teacher_id IS NOT NULL AND 
 
 <?php if (isset($message)): ?>
 <!-- Bootstrap 5 Alert -->
-<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show position-absolute top-0 start-50 translate-middle-x custom-alert" role="alert">
     <?php echo $message; ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
@@ -87,7 +89,7 @@ if (alert) {
 </script>
     <div class="container my-5">
       <h1 class="text-center mb-4">View Strand</h1>
-      <a href="./?track=<?php echo $track;?>" class="btn btn-secondary mb-3"></i> Back</a>
+      <a href="strand.php?track=<?php echo $track;?>" class="btn btn-secondary mb-3"></i> Back</a>
       <form action="update.php?id=<?php echo $row['id']; ?>" method="POST">
 
       <div class="row mb-3">
@@ -97,13 +99,13 @@ if (alert) {
             <input type="text" class="form-control" id="strand_name" name="strand_name" required
             value = "<?php echo $row['name']; ?>">
           </div>
-          <div class="col-md-6 mb-3">
+          <!-- <div class="col-md-6 mb-3">
             <label for="strand_code" class="form-label required">Strand Code</label>
             <input type="text" class="form-control" id="strand_code" name="strand_code" required
             value = "<?php echo $row['code']; ?>">
-          </div>
+          </div> -->
           
-          <div class="col-md-6 mb-3">
+          <!-- <div class="col-md-6 mb-3">
             <label for="teacher_id" class="form-label required">Assigned Adviser</label>
             <select name="teacher_id" class="form-control" required>
                         <option value="<?php echo $row['teacher_id']; ?>" hidden><?php echo $row['teacher_name']; ?></option>
@@ -115,7 +117,7 @@ if (alert) {
                             </option>
                         <?php endwhile; ?>
                     </select>
-          </div>
+          </div> -->
 
           <div class="col-md-6 mb-3">
             <label for="track" class="form-label required">Track Name</label>

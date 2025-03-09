@@ -21,10 +21,11 @@ $mothers_name = ucwords(mysqli_real_escape_string($conn, $_POST['mothers_name'])
 $mothers_occupation = ucwords(mysqli_real_escape_string($conn, $_POST['mothers_occupation']));
 $fathers_name = ucwords(mysqli_real_escape_string($conn, $_POST['fathers_name']));
 $fathers_occupation = ucwords(mysqli_real_escape_string($conn, $_POST['fathers_occupation']));
-$strand = mysqli_real_escape_string($conn, $_POST['strand']);
 $username = mysqli_real_escape_string($conn, $_POST['username']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
 $grade_level = mysqli_real_escape_string($conn, $_POST['grade_level']);
+$password = mysqli_real_escape_string($conn, $_POST['password']);
+
 
 // Check if the student already exists
 $squery = mysqli_query($conn, "SELECT * FROM student WHERE 
@@ -40,6 +41,39 @@ while ($row = mysqli_fetch_array($squery)) {
 
 // Insert new student if not already exists
 if (empty($check)) {
+    //check if it has already records
+    if (isset($_GET['student'])){ 
+        $student_id = $_GET['student'];
+        // Prepare SQL update statement
+    $sql1 = "UPDATE `student` SET
+    `lrn` = '$lrn',
+    `first_name` = '$first_name',
+    `middle_name` = '$middle_name',
+    `last_name` = '$last_name',
+    `gender` = '$gender',
+    `age` = '$age',
+    `nationality` = '$nationality',
+    `birthday` = '$birthday',
+    `address` = '$address',
+    `contact` = '$contact',
+    `email` = '$email',
+    `mothers_name` = '$mothers_name',
+    `mothers_occupation` = '$mothers_occupation',
+    `fathers_name` = '$fathers_name',
+    `fathers_occupation` = '$fathers_occupation',
+    `username` = '$username',
+    `grade_level` = '$grade_level',
+    `password` = '$password'
+WHERE id = '$student_id'";
+
+// Execute the query
+if (mysqli_query($conn, $sql1)) {
+    header("location:view.php?id=$student_id&message=Success! Student details have been updated successfully.&grade=$grade_level");
+} else {
+    header("location:view.php?id=$student_id&error=Error! Could not update the student details.&grade=$grade_level");
+}
+
+    }else{
     // Prepare SQL insert statement
     $sql2 = "INSERT INTO `student` (
         `lrn`,
@@ -57,7 +91,6 @@ if (empty($check)) {
         `mothers_occupation`,
         `fathers_name`,
         `fathers_occupation`,
-        `strand`,
         `username`,
         `password`,
         `grade_level`,
@@ -78,7 +111,6 @@ if (empty($check)) {
         '$mothers_occupation',
         '$fathers_name',
         '$fathers_occupation',
-        '$strand',
         '$username',
         '$password',
         '$grade_level',
@@ -86,10 +118,11 @@ if (empty($check)) {
 
     // Execute the query
     if (mysqli_query($conn, $sql2)) {
-        header("location:index.php?message=Success! New student has been added successfully.&grade=$grade_level");
+        header("location:student.php?message=Success! New student has been added successfully.&grade=$grade_level");
     } else {
         header("location:add.php?error=Error! Could not insert the student.&grade=$grade_level");
     }
+}
 } else {
     header("location:add.php?error=Error! Student already exists.&grade=$grade_level");
 }

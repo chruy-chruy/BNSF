@@ -10,6 +10,7 @@ $subject_name = $_POST['subject_name'];
 $subject_code = $_POST['subject_code'];
 $details = $_POST['details'];
 $teacher_id = $_POST['teacher_id'];
+$grade_level = $_POST['grade_level'];
 
 
     // Prepare SQL update statement
@@ -22,9 +23,9 @@ $teacher_id = $_POST['teacher_id'];
 
     // Execute the query
     if (mysqli_query($conn, $sql2)) {
-        header("location:view.php?id=$id&message=Success! Subject details have been updated successfully.");
+        header("location:view.php?grade=$grade_level&id=$id&message=Success! Subject details have been updated successfully.");
     } else {
-        header("location:view.php?id=$id&error=Error! Could not update the Subject details.");
+        header("location:view.php?grade=$grade_level&id=$id&error=Error! Could not update the Subject details.");
     }
 
 ?>

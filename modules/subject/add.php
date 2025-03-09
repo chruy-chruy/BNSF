@@ -9,6 +9,7 @@ if (isset($_GET['message'])) {
 }
 
 include "../../db_conn.php";
+$grade = $_GET['grade'];
 
 // Fetch teachers from the database
 $teachers_query = mysqli_query($conn, "SELECT id, CONCAT(first_name, ' ', last_name) AS full_name FROM teacher Where del_status != 'deleted'"); // Adjust table name and columns as necessary
@@ -26,6 +27,8 @@ $teachers_query = mysqli_query($conn, "SELECT id, CONCAT(first_name, ' ', last_n
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
   <!-- style -->
   <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
+
 </head>
 <body>
 
@@ -42,7 +45,7 @@ $teachers_query = mysqli_query($conn, "SELECT id, CONCAT(first_name, ' ', last_n
 
 <?php if (isset($message)): ?>
 <!-- Bootstrap 5 Alert -->
-<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show position-absolute top-0 start-50 translate-middle-x custom-alert" role="alert">
     <?php echo $message; ?>
 </div>
 <?php endif; ?>
@@ -74,22 +77,22 @@ if (alert) {
 
         <div class="row mb-3">
           <h3 class="mb-3">Subject Information</h3>
-          <div class="col-md-6">
+          <!-- <div class="col-md-6">
             <label for="subject_name" class="form-label required">Subject Name</label>
             <input type="text" class="form-control" id="subject_name" name="subject_name" required>
-          </div>
+          </div> -->
           <div class="col-md-6">
             <label for="subject_code" class="form-label required">Subject Code</label>
             <input type="text" class="form-control" id="subject_code" name="subject_code" required>
           </div>
+          <div class="col-md-6">
+            <label for="grade_level" class="form-label required">Grade Level</label>
+            <input type="text" class="form-control" id="grade_level" name="grade_level" value="<?php echo $grade;?>" readonly required>
+        </div>
         </div>
 
         <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="details" class="form-label">Details</label>
-            <input type="text" class="form-control" id="details" name="details">
-          </div>
-          
+
           <div class="col-md-6">
             <label for="teacher_id" class="form-label required">Assigned Teacher</label>
             <select name="teacher_id" class="form-control" required>
@@ -98,6 +101,11 @@ if (alert) {
                             <option value="<?php echo $teacher['id']; ?>"><?php echo $teacher['full_name']; ?></option>
                         <?php endwhile; ?>
                     </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="details" class="form-label">Subject Description</label>
+            <textarea type="text" class="form-control" id="details" name="details"></textarea>
           </div>
         </div>
 

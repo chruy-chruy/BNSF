@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
   <!-- style -->
    <link rel="stylesheet" href="../../assets/css/styles.css">
+   <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
 </head>
 <body>
 <?php 

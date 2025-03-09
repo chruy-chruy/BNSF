@@ -7,6 +7,7 @@ if (isset($_GET['message'])) {
     $message = $_GET['error'];
     $alertType = 'danger'; // Set alert type to 'danger' for errors
 }
+$grade = $_GET['grade'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,6 +22,8 @@ if (isset($_GET['message'])) {
   <!-- Custom CSS -->
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
+
 </head>
 <body>
 <?php 
@@ -56,7 +59,7 @@ FROM teacher WHERE del_status != 'deleted'
 
 <?php if (isset($message)): ?>
 <!-- Bootstrap 5 Alert -->
-<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show position-absolute top-0 start-50 translate-middle-x custom-alert" role="alert">
     <?php echo $message; ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
@@ -85,31 +88,31 @@ if (alert) {
 </script>
     <div class="container my-5">
       <h1 class="text-center mb-4">View Subject</h1>
-      <a href="index.php" class="btn btn-secondary mb-3">
+      <a href="subject.php?grade=<?php echo $grade; ?>" class="btn btn-secondary mb-3">
     <i class="bi bi-arrow-left"></i> Back
   </a>
       <form action="update.php?id=<?php echo $row['id']; ?>" method="POST">
 
       <div class="row mb-3">
           <h3 class="mb-3">Subject Information</h3>
-          <div class="col-md-6">
+          <!-- <div class="col-md-6">
             <label for="subject_name" class="form-label required">Subject Name</label>
             <input type="text" class="form-control" id="subject_name" name="subject_name" required
             value = "<?php echo $row['name']; ?>">
-          </div>
+          </div> -->
           <div class="col-md-6">
             <label for="subject_code" class="form-label required">Subject Code</label>
             <input type="text" class="form-control" id="subject_code" name="subject_code" required
             value = "<?php echo $row['code']; ?>">
           </div>
+          <div class="col-md-6">
+            <label for="grade_level" class="form-label required">Grade Level</label>
+            <input type="text" class="form-control" id="grade_level" name="grade_level" required readonly
+            value = "<?php echo $row['grade_level']; ?>">
+          </div>
         </div>
 
         <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="details" class="form-label">Details</label>
-            <input type="text" class="form-control" id="details" name="details"
-            value = "<?php echo $row['details']; ?>">
-          </div>
           
           <div class="col-md-6">
             <label for="teacher_id" class="form-label required">Assigned Teacher</label>
@@ -124,7 +127,14 @@ if (alert) {
                         <?php endwhile; ?>
                     </select>
           </div>
+
+          <div class="col-md-6">
+            <label for="details" class="form-label">Subject Description</label>
+            <textarea type="text" class="form-control" id="details" name="details"
+            value = "<?php echo $row['details']; ?>"><?php echo $row['details']; ?></textarea>
+          </div>
         </div>
+
 
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Submit</button>

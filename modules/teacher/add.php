@@ -20,6 +20,8 @@ if (isset($_GET['message'])) {
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
   <!-- style -->
   <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
+
 </head>
 <body>
 
@@ -36,7 +38,7 @@ if (isset($_GET['message'])) {
 
 <?php if (isset($message)): ?>
 <!-- Bootstrap 5 Alert -->
-<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show" role="alert">
+<div id="autoDismissAlert" class="alert alert-<?php echo $alertType; ?> alert-dismissible fade show position-absolute top-0 start-50 translate-middle-x custom-alert" role="alert">
     <?php echo $message; ?>
 </div>
 <?php endif; ?>
@@ -72,20 +74,31 @@ if (alert) {
             <label for="id_number" class="form-label required">ID Number</label>
             <input type="number" class="form-control" id="id_number" name="id_number" required>
           </div>
+
+          <script>document.getElementById('id_number').addEventListener('input', function (e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 7); // Allows only numbers, max 7 digits
+});</script>
+
           <div class="col-md-6">
             <label for="last_name" class="form-label required">Last Name</label>
-            <input type="text" class="form-control" id="last_name" name="last_name" required>
+            <input type="text" class="form-control" id="last_name" name="last_name" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="middle_name" class="form-label">Middle Name</label>
-            <input type="text" class="form-control" id="middle_name" name="middle_name">
+            <input type="text" class="form-control" id="middle_name" name="middle_name"
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
           </div>
           <div class="col-md-6">
             <label for="first_name" class="form-label required">First Name</label>
-            <input type="text" class="form-control" id="first_name" name="first_name" required>
+            <input type="text" class="form-control" id="first_name" name="first_name" required
+           pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed" 
+           oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
           </div>
         </div>
 
@@ -115,6 +128,11 @@ if (alert) {
             <label for="contact" class="form-label required">Contact</label>
             <input type="text" class="form-control" id="contact" name="contact" required>
           </div>
+
+          <script>document.getElementById('contact').addEventListener('input', function (e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 11); // Allows only numbers, max 11 digits
+});</script>
+
           <div class="col-md-6">
             <label for="email" class="form-label required">Email</label>
             <input type="email" class="form-control" id="email" name="email" required>

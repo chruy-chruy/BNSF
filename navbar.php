@@ -25,24 +25,16 @@ $nav_row = mysqli_fetch_array($nav_query);
 
 <!-- Fixed Submenu for Track -->
 <div class="submenu">
-    <a href="#" class="<?php if ($page == 'Strand/TVL' || $page == 'Strand/Academic') {echo 'active';} ?>"><i class="bi bi-geo-alt"></i> Track</a>
-    <ul>
-        <li><a href="../strand?track=TVL" class="<?php if ($page == 'Strand/TVL') {echo 'active';} ?>"><i class="bi bi-card-list"></i> TVL</a></li>
-        <li><a href="../strand?track=Academic" class="<?php if ($page == 'Strand/Academic') {echo 'active';} ?>"><i class="bi bi-bookmark"></i> Academic</a></li>
-    </ul>
+    <a href="../strand" class="<?php if ($page == 'Strand' || $page == 'Strand') {echo 'active';} ?>"><i class="bi bi-geo-alt"></i> Track</a>
 </div>
 
 <!-- <a href="../Student" class="<?php if ($page == 'Student') {echo 'active';} ?>"><i class="bi bi-person-lines-fill"></i> Student</a> -->
 <div class="submenu">
-    <a href="#" class="<?php if ($page == 'Student/11' || $page == 'Student/12') {echo 'active';} ?>"><i class="bi bi-person-lines-fill"></i> Student</a>
-    <ul>
-        <li><a href="../Student?grade=11" class="<?php if ($page == 'Student/11') {echo 'active';} ?>"><i class="bi bi-people-fill"></i> Grade 11</a></li>
-        <li><a href="../Student?grade=12" class="<?php if ($page == 'Student/12') {echo 'active';} ?>"><i class="bi bi-people-fill"></i> Grade 12</a></li>
-    </ul>
+    <a href="../student" class="<?php if ($page == 'Student' || $page == 'Student') {echo 'active';} ?>"><i class="bi bi-person-lines-fill"></i> Student</a>
 </div>
 
 <a href="../schedule" class="<?php if ($page == 'Schedule') {echo 'active';} ?>"><i class="bi bi-calendar-event"></i> Schedule</a>
-<a href="../grades" class="<?php if ($page == 'Grades') {echo 'active';} ?>"><i class="bi bi-bar-chart"></i> Grade</a>
+<!-- <a href="../grades" class="<?php if ($page == 'Grades') {echo 'active';} ?>"><i class="bi bi-bar-chart"></i> Grade</a> -->
 
 <?php if ($nav_row['role'] == "Super Admin") { ?>
     <a href="../user" class="<?php if ($page == 'User') {echo 'active';} ?>"><i class="bi bi-person-circle"></i> Users</a>

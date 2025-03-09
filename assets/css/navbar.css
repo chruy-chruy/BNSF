@@ -1,81 +1,80 @@
-/* Sidebar style */
+/* Default Sidebar (Desktop View) */
 .sidebar {
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    background-color: #343a40;
-    color: white;
-    padding-top: 20px;
-    transition: width 0.3s;
-  }
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px; /* Fixed width for desktop */
+  background-color: #343a40;
+  color: white;
+  padding-top: 20px;
+  transition: width 0.3s ease-in-out;
+}
 
-  .sidebar a {
-    color: white;
-    padding: 10px;
-    text-decoration: none;
-    display: block;
-    font-size: 18px;
-  }
+.sidebar a {
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+  display: block;
+  font-size: 18px;
+}
 
-  .sidebar a:hover {
-    background-color: #007bff;
-    color: white;
-  }
+.sidebar a:hover {
+  background-color: #007bff;
+  color: white;
+}
 
-  .sidebar a.active {
-    background-color: #007bff;
-    color: white;
-  }
+.sidebar a.active {
+  background-color: #007bff;
+  color: white;
+}
 
+/* Content Styling */
+.content {
+  margin-left: 250px; /* Ensure correct spacing */
+  padding: 20px;
+  transition: margin-left 0.3s ease-in-out;
+}
 
-  .sidebar-collapsed {
-    width: 80px;
+/* Sidebar Collapsed for Mobile */
+@media screen and (max-width: 768px) {
+  .sidebar {
+      width: 80px; /* Fixed width for mobile */
   }
 
   .content {
-    margin-left: 250px;
-    padding: 20px;
+      margin-left: 80px; /* Adjust content */
   }
 
-  .collapsed .content {
-    margin-left: 80px;
+  .logo {
+      width: 50px;  /* Smaller logo */
+      height: 50px;
+      margin: 0 auto;
+      display: block;
   }
 
-  .logo{
-    max-width: 150px;
-    max-height: 150px;
-    border-radius: 50%;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    margin-left: 65px;
-    width: 120px;
+  .sidebar a {
+      font-size: 14px; /* Smaller text */
+      text-align: center;
+      padding: 8px;
+  }
 }
 
+/* Desktop View */
+@media screen and (min-width: 769px) {
+  .sidebar {
+      width: 250px; /* Fixed width */
+  }
 
-.submenu {
-  margin: 10px 0;
-}
+  .content {
+      margin-left: 250px; /* Ensure proper spacing */
+  }
 
-.submenu ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0 0 0 15px; /* Indent submenu items */
-}
-
-.submenu ul li {
-  margin: 5px 0;
-}
-
-.submenu ul li a {
-  text-decoration: none;
-  display: block;
-  padding: 5px;
-  color: white;
-  font-size: 15px;
-}
-
-.submenu ul li a:hover {
-  background-color: #007bff;
+  .logo {
+      width: 120px; /* Normal logo size */
+      height: 120px;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+  }
 }
