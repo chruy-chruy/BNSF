@@ -4,7 +4,6 @@ session_start();
 if (isset($_SESSION['id'])) {
     header("Location: modules/dashboard/");
     exit();
-
 } ?>
 
 <!DOCTYPE html>
@@ -12,10 +11,10 @@ if (isset($_SESSION['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
-    
+    <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
     <title>School System Login</title>
-        <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
         /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
@@ -24,7 +23,89 @@ if (isset($_SESSION['id'])) {
             background-color: #f4f4f4;
             color: #333;
         }
-        
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .map-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 20px;
+    background-color: #fff;
+    gap: 20px; /* Adds spacing between elements */
+}
+
+.map-container, .info-section {
+    width: 50%;
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Stack vertically on smaller screens */
+@media (max-width: 768px) {
+    .map-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .map-container, .info-section {
+        width: 90%; /* Adjusts width for better layout */
+        height: auto; /* Allows content to expand */
+        overflow: auto; 
+    }
+}
+
+
+        .info-section {
+            /* background-color: #ecf0f1; */
+            text-align: left;
+            padding: 20px;
+        }
+
+        .info-section h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #16a085;
+        }
+
+        .info-section p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .info-item i {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #16a085;
+        }
+
+         /* General Styles */
+         body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
 
         a {
             text-decoration: none;
@@ -93,9 +174,9 @@ if (isset($_SESSION['id'])) {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 10px;
+            max-width: 700px;
             text-align: center;
             backdrop-filter: blur(10px);
-            margin: 20px;
         }
 
         .header-content h2 {
@@ -125,7 +206,7 @@ if (isset($_SESSION['id'])) {
             background-color: rgba(255, 255, 255, 0.9);
             color: #333;
             padding: 20px;
-            margin:10px auto;
+            width: 180px;
             text-align: center;
             border-radius: 15px;
             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
@@ -170,7 +251,6 @@ if (isset($_SESSION['id'])) {
             max-width: 400px;
             text-align: center;
             position: relative;
-            margin:20px;
         }
 
         .modal-content h3 {
@@ -213,15 +293,7 @@ if (isset($_SESSION['id'])) {
         .close-btn:hover {
             color: #000;
         }
-
-        /* Footer Styles */
-        .footer {
-            background-color: #2c3e50;
-            color: #fff;
-            text-align: center;
-            padding: 15px 0;
-        }
-        /* Ensure the page fills the full viewport height */
+/* Ensure the page fills the full viewport height */
 html, body {
     height: 100%;
     margin: 0;
@@ -258,76 +330,40 @@ html, body {
             <li><a href="index.php">Home</a></li>
         </ul>
     </nav>
-
-    <!-- Header Section -->
-    <header class="header">
-        <div class="header-content">
-            <h2>Welcome to BNSF</h2>
-            <p>Manage your schedules, grades, and more from one place.</p>
-            <div class="login-options">
-                <button class="login-button" onclick="openModal('student')">
-                    <img src="assets/img/students.png" alt="Student Icon">
-                    <span>Student Portal</span>
-                </button>
-                <button class="login-button" onclick="openModal('faculty')">
-                    <img src="assets/img/teacher.png" alt="Faculty Icon">
-                    <span>Faculty Portal</span>
-                </button>
+    <!-- Existing content remains unchanged -->
+    
+    <!-- School Information and Map Section -->
+    <section class="map-section">
+        <div class="map-container">
+            <iframe width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen
+            src="//maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=+(general santos city, bula national school of fisheries)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+            </iframe>
+        </div>
+        <div class="info-section">
+            <h2>Information About Us</h2>
+            <p>We are the only Fisheries School in region 12 that offers the best skills.</p>
+            <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span><strong>Location</strong><br>Zone-7 Bula, General Santos City</span>
+            </div>
+            <br>
+            <div class="info-item">
+                <i class="fas fa-phone"></i>
+                <span><strong>Telephone</strong><br>(083)301-4555</span>
+            </div>
+            <br>
+            <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                <span><strong>Email</strong><br>bulanationalschooloffisheries@gmail.com</span>
             </div>
         </div>
-    </header>
-
-    <!-- Modal -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal()">&times;</button>
-            <h3 id="modal-title">Login</h3>
-            <form id="login-form" action="validate_login.php" method="POST">
-                <input type="text" placeholder="Username" name="username" required>
-                <input type="password" placeholder="Password" name="password" required>
-                <!-- Hidden input for role -->
-                <input type="hidden" id="role-input" name="role" value="">
-                <button type="submit">Login</button>
-            </form>
-            <!-- Display error message if any -->
-            <?php if (isset($_GET['error'])) { ?>
-                    <p class="error-message" style="margin-bottom: 15px; color: red;"><?php echo $_GET['error']; ?></p>
-                <?php } ?>
-        </div>
-    </div>
-
-    <!-- Footer Section -->
+    </section>
+    
+    <!-- Existing footer remains unchanged -->
+         <!-- Footer Section -->
     <footer class="footer">
         <p>&copy; 2025 BULA NATIONAL SCHOOL OF FISHERIES. All Rights Reserved.</p>
     </footer>
 
-    <script>
-        function openModal(role) {
-            const modal = document.getElementById('modal');
-            const modalTitle = document.getElementById('modal-title');
-            const roleInput = document.getElementById('role-input');
-
-            // Update modal title and hidden input value based on role
-            if (role === 'student') {
-                modalTitle.textContent = 'Student Portal Login';
-                roleInput.value = 'student';
-            } else if (role === 'faculty') {
-                modalTitle.textContent = 'Faculty Portal Login';
-                roleInput.value = 'teacher';
-            }
-
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.style.display = 'none';
-        }
-
-        <?php if (isset($_GET['error'])) { ?>
-            openModal(role);
-        <?php } ?>
-    </script>
 </body>
 </html>
-

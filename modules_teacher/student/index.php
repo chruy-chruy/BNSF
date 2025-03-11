@@ -13,8 +13,6 @@ $currentYear = date("Y");
 $nextYear = $currentYear + 1;
 // Create the school year variable
 $sy = "$currentYear-$nextYear";
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,36 +26,6 @@ $sy = "$currentYear-$nextYear";
   <!-- Custom Style -->
   <link rel="stylesheet" href="../../assets/css/styles.css">
   <link rel="icon" type="image/x-icon" href="../../assets/img/logo.png">
-  <style>
-    /* Box button design */
-    .btn-box {
-      display: block;
-      width: 200px; /* Fixed width for all buttons */
-      padding: 15px 0; /* Consistent padding */
-      font-size: 18px; /* Font size */
-      text-align: center; /* Center the text */
-      border: 2px solid #007bff; /* Border for box design */
-      border-radius: 8px; /* Rounded corners */
-      transition: all 0.3s ease; /* Smooth transition for hover effect */
-    }
-
-    /* Button color */
-    .btn-tvl {
-      background-color: #28a745;
-      color: white;
-    }
-
-    .btn-academic {
-      background-color: #007bff;
-      color: white;
-    }
-
-    /* Hover effect */
-    .btn-box:hover {
-      transform: scale(1.05); /* Slightly scale up on hover */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Add shadow on hover */
-    }
-  </style>
 </head>
 <body>
 <?php 
@@ -66,39 +34,49 @@ include "../../db_conn.php";
 include "../../navbar_teacher.php"; 
 
 // Fetch schedules, join with subject table, and get section (strand) name
-$sql_sections = 'SELECT DISTINCT strand.id, strand.name,schedules.grade_level
-                 FROM schedules
-                 JOIN strand ON schedules.section = strand.id
-                 WHERE schedules.monday IN (SELECT id FROM subject WHERE teacher_id = ?) 
-                    OR schedules.tuesday IN (SELECT id FROM subject WHERE teacher_id = ?) 
-                    OR schedules.wednesday IN (SELECT id FROM subject WHERE teacher_id = ?) 
-                    OR schedules.thursday IN (SELECT id FROM subject WHERE teacher_id = ?) 
-                    OR schedules.friday IN (SELECT id FROM subject WHERE teacher_id = ?)';
+$sql_sections = 'SELECT DISTINCT strand.id, strand.name, schedules.grade_level, schedule_subject.subject, subject.code
+                FROM schedules 
+                JOIN strand ON schedules.section = strand.id
+                INNER JOIN schedule_subject ON schedule_subject.section = schedules.section
+                INNER JOIN subject ON schedule_subject.subject = subject.id
+                WHERE subject.teacher_id = ?';
 
 $stmt_sections = $conn->prepare($sql_sections);
-$stmt_sections->bind_param("iiiii", $teacher_id, $teacher_id, $teacher_id, $teacher_id, $teacher_id);
+$stmt_sections->bind_param("i", $teacher_id);
 $stmt_sections->execute();
 $result_sections = $stmt_sections->get_result();
 ?>
 
 <!-- Main Content (Schedule Module) -->
 <div class="content" id="content">
-  <h1>Students Module</h1>
-  <p>Manage the list of students here.</p>
+  <h1>Grades Module</h1>
+  <!-- <p>Manage Grades here.</p> -->
 
-  <!-- Schedule Module -->
-  <div id="scheduleSection" class="d-flex justify-content-center align-items-center" style="height: 50vh;">
-    <div class="text-center">
-      <!-- Button Container -->
-      <div class="d-flex justify-content-center gap-4">
-      <?php while($row = mysqli_fetch_assoc($result_sections)) {
-        $id = $row['id']; ?>
-        <a href="student.php?section_id=<?= $row['id'] ?>&grade_level=<?= $row['grade_level'] ?>" class="btn btn-tvl btn-box">
-          <?= htmlspecialchars($row['name']) . " - " .$row['grade_level'] ?>
-        </a>
-      <?php } ?>
-      </div>
-    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+          <tr>
+            <th>Subject</th>
+            <th>Section Name</th>
+            <th>Grade Level</th>
+            <th style="width:180px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while ($row = mysqli_fetch_assoc($result_sections)) { ?>
+          <tr>
+            <td><?= htmlspecialchars($row['code']); ?></td>
+            <td><?= htmlspecialchars($row['name']); ?></td>
+            <td><?= htmlspecialchars($row['grade_level']); ?></td>
+            <td>
+              <a href="student.php?section_id=<?= $row['id'] ?>&grade_level=<?= $row['grade_level'] ?>&subject_id=<?= $row['subject'] ?>"  class="btn btn-primary">
+                View Students
+              </a>
+            </td>
+          </tr>
+        <?php } ?>
+        </tbody>
+      </table>
   </div>
 </div>
 </body>

@@ -351,7 +351,7 @@ function remove(id,sched){
 FROM schedule_subject ss
 INNER JOIN subject s ON ss.subject = s.id
 INNER JOIN teacher t ON s.teacher_id = t.id
-WHERE ss.semester = '$quarter' ";
+WHERE ss.semester = '$quarter' AND ss.section ='$section' AND ss.school_year = '$sy' AND ss.grade_level = '$grade'";
     $result = mysqli_query($conn, $query);
     ?>
 

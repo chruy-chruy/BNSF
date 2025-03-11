@@ -1,22 +1,20 @@
 <?php
-
 session_start();
 if (isset($_SESSION['id'])) {
     header("Location: modules/dashboard/");
     exit();
-
-} ?>
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
-    
-    <title>School System Login</title>
-        <style>
-        /* General Styles */
+    <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
+    <title>About Us - BNSF</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>      /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -24,7 +22,74 @@ if (isset($_SESSION['id'])) {
             background-color: #f4f4f4;
             color: #333;
         }
-        
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Additional Styles for Map and Info */
+        .map-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            background-color: #fff;
+        }
+
+        .map-container, .info-section {
+            width: 50%;
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            /* box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-section {
+            /* background-color: #ecf0f1; */
+            text-align: left;
+            padding: 20px;
+        }
+
+        .info-section h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #16a085;
+        }
+
+        .info-section p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .info-item i {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #16a085;
+        }
+
+         /* General Styles */
+         body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
 
         a {
             text-decoration: none;
@@ -93,9 +158,9 @@ if (isset($_SESSION['id'])) {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 10px;
+            max-width: 700px;
             text-align: center;
             backdrop-filter: blur(10px);
-            margin: 20px;
         }
 
         .header-content h2 {
@@ -125,7 +190,7 @@ if (isset($_SESSION['id'])) {
             background-color: rgba(255, 255, 255, 0.9);
             color: #333;
             padding: 20px;
-            margin:10px auto;
+            width: 180px;
             text-align: center;
             border-radius: 15px;
             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
@@ -170,7 +235,6 @@ if (isset($_SESSION['id'])) {
             max-width: 400px;
             text-align: center;
             position: relative;
-            margin:20px;
         }
 
         .modal-content h3 {
@@ -213,15 +277,7 @@ if (isset($_SESSION['id'])) {
         .close-btn:hover {
             color: #000;
         }
-
-        /* Footer Styles */
-        .footer {
-            background-color: #2c3e50;
-            color: #fff;
-            text-align: center;
-            padding: 15px 0;
-        }
-        /* Ensure the page fills the full viewport height */
+/* Ensure the page fills the full viewport height */
 html, body {
     height: 100%;
     margin: 0;
@@ -241,11 +297,35 @@ html, body {
     text-align: center;
     padding: 15px 0;
 }
+        .about-content {
+            max-width: 800px;
+            margin: auto;
+            font-size: 1.2em;
+        }
+        .vision-mission {
+            background: linear-gradient(to right, #1abc9c, #16a085);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .vision-mission h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .about-section {
+            padding: 50px 20px;
+            background-color: #fff;
+            text-align: center;
+        }
+        .about-section h2 {
+            font-size: 2.5em;
+            color: #16a085;
+        }
     </style>
 </head>
 <body>
-     <!-- Navbar Section -->
-     <nav class="navbar">
+   <!-- Navbar Section -->
+   <nav class="navbar">
         <div class="logo">
         <a href="index.php">
                 <img src="assets/img/logo.png" alt="School Logo" class="logo-img">
@@ -258,76 +338,27 @@ html, body {
             <li><a href="index.php">Home</a></li>
         </ul>
     </nav>
-
-    <!-- Header Section -->
-    <header class="header">
-        <div class="header-content">
-            <h2>Welcome to BNSF</h2>
-            <p>Manage your schedules, grades, and more from one place.</p>
-            <div class="login-options">
-                <button class="login-button" onclick="openModal('student')">
-                    <img src="assets/img/students.png" alt="Student Icon">
-                    <span>Student Portal</span>
-                </button>
-                <button class="login-button" onclick="openModal('faculty')">
-                    <img src="assets/img/teacher.png" alt="Faculty Icon">
-                    <span>Faculty Portal</span>
-                </button>
-            </div>
+    <section class="about-section">
+        <h2>About Us</h2>
+        <div class="about-content">
+            <p>Welcome to Bula National School of Fisheries (BNSF), the premier Fisheries School in Region 12, dedicated to providing top-tier education and skill training.</p>
         </div>
-    </header>
-
-    <!-- Modal -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal()">&times;</button>
-            <h3 id="modal-title">Login</h3>
-            <form id="login-form" action="validate_login.php" method="POST">
-                <input type="text" placeholder="Username" name="username" required>
-                <input type="password" placeholder="Password" name="password" required>
-                <!-- Hidden input for role -->
-                <input type="hidden" id="role-input" name="role" value="">
-                <button type="submit">Login</button>
-            </form>
-            <!-- Display error message if any -->
-            <?php if (isset($_GET['error'])) { ?>
-                    <p class="error-message" style="margin-bottom: 15px; color: red;"><?php echo $_GET['error']; ?></p>
-                <?php } ?>
-        </div>
-    </div>
-
-    <!-- Footer Section -->
+    </section>
+    <section class="vision-mission">
+        <h2>VISION</h2>
+        <p>We dream of Filipinos who passionately love their country and whose competencies and values enable them to realize their full potential and contribute meaningfully to building the nation.</p>
+        <p>We are a learner-centered public institution, the Department of Education continuously improves itself to better serve its stakeholders.</p>
+    </section>
+    <section class="vision-mission">
+        <h2>MISSION</h2>
+        <p>To protect and promote the right of every Filipino to quality, equitable, culture-based, and complete basic education where:</p>
+        <p>- Students learn in a child-friendly, gender-sensitive, safe, and motivating environment.</p>
+        <p>- Teachers facilitate learning and constantly nurture every learner.</p>
+        <p>- Administrators and staff ensure an enabling and supportive environment for effective learning.</p>
+        <p>- Family, community, and other stakeholders are actively engaged in lifelong learning.</p>
+    </section>
     <footer class="footer">
         <p>&copy; 2025 BULA NATIONAL SCHOOL OF FISHERIES. All Rights Reserved.</p>
     </footer>
-
-    <script>
-        function openModal(role) {
-            const modal = document.getElementById('modal');
-            const modalTitle = document.getElementById('modal-title');
-            const roleInput = document.getElementById('role-input');
-
-            // Update modal title and hidden input value based on role
-            if (role === 'student') {
-                modalTitle.textContent = 'Student Portal Login';
-                roleInput.value = 'student';
-            } else if (role === 'faculty') {
-                modalTitle.textContent = 'Faculty Portal Login';
-                roleInput.value = 'teacher';
-            }
-
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.style.display = 'none';
-        }
-
-        <?php if (isset($_GET['error'])) { ?>
-            openModal(role);
-        <?php } ?>
-    </script>
 </body>
 </html>
-

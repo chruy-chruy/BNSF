@@ -93,103 +93,88 @@ $conn->close();
   <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
   <style>
-    .schedule-table th{
-      padding: 8px;
-      text-align: center;
-      vertical-align: middle;
-    }
     .schedule-header {
       text-align: center;
       margin-bottom: 20px;
     }
-    .schedule-table td {
-    text-align: left !important; /* Align text to the left */
-    vertical-align: middle; /* Keep text vertically centered */
-    padding: 8px; /* Add padding for better readability */
-}
+    .schedule-table th, .schedule-table td {
+      text-align: center;
+      vertical-align: middle;
+      padding: 10px;
+      font-size: 14px;
+    }
+    /* Make sure inputs fit well on all screen sizes */
+    .form-control-sm {
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
-  <div class="content" id="content">
+<div class="content" id="content">
     <div class="schedule-header">
       <h2>My Schedule</h2>
     </div>
-    <br>
-    <div class="row mb-1">
-    <div class="col-md-6 d-flex align-items-center gap-2">
-        <label for="student_name" class="form-label m-0" style="white-space: nowrap;">Student Name:</label>
+
+    <!-- Student Information -->
+    <div class="row g-2 row-cols-1 row-cols-md-2 mb-3">
+      <div class="col d-flex align-items-center gap-2">
+        <label for="student_name" class="form-label m-0">Student Name:</label>
         <input type="text" class="form-control form-control-sm bg-transparent border-0" id="student_name" 
                value="<?php echo $student_name; ?>" readonly>
-    </div>
-    <div class="col-md-6 d-flex align-items-center gap-2">
-        <label for="section_name" class="form-label m-0" style="white-space: nowrap;">Section Name:</label>
+      </div>
+      <div class="col d-flex align-items-center gap-2">
+        <label for="section_name" class="form-label m-0">Section Name:</label>
         <input type="text" class="form-control form-control-sm bg-transparent border-0" id="section_name" 
                value="<?php echo $section_name; ?>" readonly>
+      </div>
     </div>
-</div>
 
-<div class="row mb-1">
-    <div class="col-md-6 d-flex align-items-center gap-2">
-        <label for="student_lrn" class="form-label m-0" style="white-space: nowrap;">Student LRN:</label>
+    <div class="row g-2 row-cols-1 row-cols-md-2 mb-3">
+      <div class="col d-flex align-items-center gap-2">
+        <label for="student_lrn" class="form-label m-0">Student LRN:</label>
         <input type="text" class="form-control form-control-sm bg-transparent border-0" id="student_lrn" 
                value="<?php echo $student_lrn; ?>" readonly>
-    </div>
-    <div class="col-md-6 d-flex align-items-center gap-2">
-        <label for="grade_level" class="form-label m-0" style="white-space: nowrap;">Grade Level:</label>
+      </div>
+      <div class="col d-flex align-items-center gap-2">
+        <label for="grade_level" class="form-label m-0">Grade Level:</label>
         <input type="text" class="form-control form-control-sm bg-transparent border-0" id="grade_level" 
                value="<?php echo $grade_level . ' - ' . $semester_name; ?>" readonly>
+      </div>
     </div>
-</div>
 
-<table class="table table-bordered schedule-table">
-  <thead class="thead-light">
-    <tr>
-      <th>Time</th>
-      <th>Monday</th>
-      <th>Tuesday</th>
-      <th>Wednesday</th>
-      <th>Thursday</th>
-      <th>Friday</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach ($schedules as $schedule): ?>
-      <tr>
-        <td><?= date("h:i A", strtotime($schedule['time_from'])) . ' - ' . date("h:i A", strtotime($schedule['time_to'])) ?></td>
-
-        <td>
-          <?= (!empty($schedule['monday']) && ($schedule['monday'] == 'Lunch' || $schedule['monday'] == 'Break')) 
-              ? "<strong>{$schedule['monday']}</strong>" 
-              : ($subject_map[$schedule['monday']] ?? '') ?>
-        </td>
-
-        <td>
-          <?= (!empty($schedule['tuesday']) && ($schedule['tuesday'] == 'Lunch' || $schedule['tuesday'] == 'Break')) 
-              ? "<strong>{$schedule['tuesday']}</strong>" 
-              : ($subject_map[$schedule['tuesday']] ?? '') ?>
-        </td>
-
-        <td>
-          <?= (!empty($schedule['wednesday']) && ($schedule['wednesday'] == 'Lunch' || $schedule['wednesday'] == 'Break')) 
-              ? "<strong>{$schedule['wednesday']}</strong>" 
-              : ($subject_map[$schedule['wednesday']] ?? '') ?>
-        </td>
-
-        <td>
-          <?= (!empty($schedule['thursday']) && ($schedule['thursday'] == 'Lunch' || $schedule['thursday'] == 'Break')) 
-              ? "<strong>{$schedule['thursday']}</strong>" 
-              : ($subject_map[$schedule['thursday']] ?? '') ?>
-        </td>
-
-        <td>
-          <?= (!empty($schedule['friday']) && ($schedule['friday'] == 'Lunch' || $schedule['friday'] == 'Break')) 
-              ? "<strong>{$schedule['friday']}</strong>" 
-              : ($subject_map[$schedule['friday']] ?? '') ?>
-        </td>
-      </tr>
-    <?php endforeach; ?>
-  </tbody>
-</table>
+    <!-- Responsive Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered schedule-table">
+        <thead class="table-light">
+          <tr>
+            <th>Time</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($schedules as $schedule): ?>
+            <tr>
+              <td><?= date("h:i A", strtotime($schedule['time_from'])) . ' - ' . date("h:i A", strtotime($schedule['time_to'])) ?></td>
+              
+              <?php 
+                $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+                foreach ($days as $day): 
+              ?>
+                <td>
+                  <?= (!empty($schedule[$day]) && ($schedule[$day] == 'Lunch' || $schedule[$day] == 'Break')) 
+                      ? "<strong>{$schedule[$day]}</strong>" 
+                      : ($subject_map[$schedule[$day]] ?? '') ?>
+                </td>
+              <?php endforeach; ?>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
 
   </div>
 

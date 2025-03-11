@@ -14,8 +14,8 @@ $type = $_GET['type'];
 
     // Prepare SQL update statement
     $sql2 = "INSERT INTO `schedule_subject`
-    (`section`, `subject`, `type`, `semester`, `school_year`) 
-    VALUES ('$section','$subject_id','$type','$quarter','$sy')";
+    (`section`, `subject`, `type`, `semester`, `school_year`, `grade_level`) 
+    VALUES ('$section','$subject_id','$type','$quarter','$sy','$grade')";
 
     if (mysqli_query($conn, $sql2)) {
         header("location:schedule.php?id=$id&message=Success! Subject details have been added successfully.&grade=$grade&track=$track&section=$section&quarter=$quarter&sy=$sy");

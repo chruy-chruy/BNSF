@@ -30,7 +30,7 @@ if (isset($_SESSION['id'])) {
     <a href="../dashboard" class="<?php if ($page == 'Dashboard') {echo 'active';} ?>" >Dashboard</a>
     <a href="../schedule" class="<?php if ($page == 'Schedule') {echo 'active';} ?>">My Schedule</a>
     <?php if($adviser_row){ ?>
-    <a href="../advisory" class="<?php if ($page == 'Advisory') {echo 'active';} ?>">My Advisory</a>
+    <a href="../advisory/index.php?semester=1" class="<?php if ($page == 'Advisory') {echo 'active';} ?>">My Advisory</a>
     <?php } ?>
     <a href="../student" class="<?php if ($page == 'Students') {echo 'active';} ?>">Grades</a>
     <a href="../../logout.php">Logout</a>

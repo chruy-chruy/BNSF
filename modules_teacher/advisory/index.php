@@ -44,13 +44,15 @@ $stmt_check->close();
 
 
 
-// Fetch schedule data, prioritizing semester 2 if available
-$semester_to_fetch = $semester_2_exists ? 2 : 1;
+// // Fetch schedule data, prioritizing semester 2 if available
+$semester_to_fetch = $_GET['semester'];
 if($semester_to_fetch == 1){
   $semester_name = 'First Semester';
 }else if($semester_to_fetch == 2){
   $semester_name = 'Second Semester';
 };
+
+
 
 $sql_schedule = "SELECT time_from, time_to, monday, tuesday, wednesday, thursday, friday 
                  FROM schedules 
@@ -134,110 +136,112 @@ while ($subject = $result_subjects->fetch_assoc()) {
     <div class="col-md-6 d-flex align-items-center gap-2">
         <label for="grade_level" class="form-label m-0" style="white-space: nowrap;">Grade Level:</label>
         <input type="text" class="form-control form-control-sm bg-transparent border-0" id="grade_level" 
-               value="<?php echo $grade_level . ' - ' . $semester_name; ?>" readonly>
+               value="<?php echo $grade_level . ' - ' . $semester_name ?>" readonly>
     </div>
 </div>
-
-<table class="table table-bordered schedule-table">
-  <thead class="thead-light">
-    <tr>
-      <th>Time</th>
-      <th>Monday</th>
-      <th>Tuesday</th>
-      <th>Wednesday</th>
-      <th>Thursday</th>
-      <th>Friday</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach ($schedules as $schedule): ?>
-      <tr>
-        <td><?= date("h:i A", strtotime($schedule['time_from'])) . ' - ' . date("h:i A", strtotime($schedule['time_to'])) ?></td>
-
-        <td>
-          <?= (!empty($schedule['monday']) && ($schedule['monday'] == 'Lunch' || $schedule['monday'] == 'Break')) 
-              ? "<strong>{$schedule['monday']}</strong>" 
-              : ($subject_map[$schedule['monday']] ?? '') ?>
-        </td>
-
-        <td>
-          <?= (!empty($schedule['tuesday']) && ($schedule['tuesday'] == 'Lunch' || $schedule['tuesday'] == 'Break')) 
-              ? "<strong>{$schedule['tuesday']}</strong>" 
-              : ($subject_map[$schedule['tuesday']] ?? '') ?>
-        </td>
-
-        <td>
-          <?= (!empty($schedule['wednesday']) && ($schedule['wednesday'] == 'Lunch' || $schedule['wednesday'] == 'Break')) 
-              ? "<strong>{$schedule['wednesday']}</strong>" 
-              : ($subject_map[$schedule['wednesday']] ?? '') ?>
-        </td>
-
-        <td>
-          <?= (!empty($schedule['thursday']) && ($schedule['thursday'] == 'Lunch' || $schedule['thursday'] == 'Break')) 
-              ? "<strong>{$schedule['thursday']}</strong>" 
-              : ($subject_map[$schedule['thursday']] ?? '') ?>
-        </td>
-
-        <td>
-          <?= (!empty($schedule['friday']) && ($schedule['friday'] == 'Lunch' || $schedule['friday'] == 'Break')) 
-              ? "<strong>{$schedule['friday']}</strong>" 
-              : ($subject_map[$schedule['friday']] ?? '') ?>
-        </td>
-      </tr>
-    <?php endforeach; ?>
-  </tbody>
-</table>
-<br><br>
 <hr>
 
 
-
-<!-- students -->
 <?php
+// Get students based on selected grade level and section, sorted by gender (Male first)
+$sql_students = "SELECT id, lrn, first_name, middle_name, last_name, gender, age 
+                 FROM student
+                 WHERE grade_level = ? 
+                 AND ((grade_11 = ? AND (grade_12 IS NULL OR grade_12 = 0)) OR grade_12 = ?)
+                 ORDER BY gender ASC, last_name ASC, first_name ASC";
+$stmt_students = $conn->prepare($sql_students);
+$stmt_students->bind_param("iii", $grade_level, $section_id, $section_id);
+$stmt_students->execute();
+$result_students = $stmt_students->get_result();
 
-// Get students based on selected grade level and section
+// Fetch subjects assigned to the selected section from the schedule_subject table
+$sql_subjects = "SELECT DISTINCT subject.id, subject.code FROM subject
+                 JOIN schedule_subject ON subject.id = schedule_subject.subject
+                 WHERE schedule_subject.section = ?
+                 ORDER BY subject.id ASC";
+$stmt_subjects = $conn->prepare($sql_subjects);
+$stmt_subjects->bind_param("i", $section_id);
+$stmt_subjects->execute();
+$result_subjects = $stmt_subjects->get_result();
 
-    $sql_students = "SELECT id, lrn, first_name, middle_name, last_name, gender, age 
-                     FROM student
-                     WHERE grade_level = ? 
-                     AND ((grade_11 = ? AND (grade_12 IS NULL OR grade_12 = 0)) OR grade_12 = ?)";
-    $stmt_students = $conn->prepare($sql_students);
-    $stmt_students->bind_param("iii", $grade_level, $section_id, $section_id);
-    $stmt_students->execute();
-    $result_students = $stmt_students->get_result();
+$subjects = [];
+while ($subject = $result_subjects->fetch_assoc()) {
+    $subjects[$subject['id']] = $subject['code'];
+}
 
-    $conn->close();
-
+$selected_semester = $_GET['semester'] ?? 1;
 ?>
-<div class="schedule-header">
-      <h2>My Students</h2>
-    </div>
-<table id="studentTable" class="table table-bordered table-striped">
-          <thead class="table-dark">
-            <tr>
-              <th>LRN</th>
-              <th>Name</th>
-              <th>Gender</th>
-              <th>Age</th>
-              <th style="width:180px;">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php while ($row = $result_students->fetch_assoc()) : ?>
-              <tr>
-                <td><?= htmlspecialchars($row['lrn']) ?></td>
-                <td><?= htmlspecialchars($row['first_name'] . " " . $row['middle_name'] . " " . $row['last_name']) ?></td>
-                <td><?= htmlspecialchars($row['gender']) ?></td>
-                <td><?= htmlspecialchars($row['age']) ?></td>
 
-                <td>
-                  <!-- Button to view grades instead of adding -->
-                  <a href="student_grade.php?student_id=<?= $row['id'] ?>" class="btn btn-primary">View Grades</a>
+<div class="schedule-header">
+    <!-- <h2>Student Grades</h2> -->
+    <div class="semester-buttons">
+        <a href="?semester=1" class="btn <?= $selected_semester == 1 ? 'btn-primary' : 'btn-info' ?>">Semester 1</a>
+        <a href="?semester=2" class="btn <?= $selected_semester == 2 ? 'btn-primary' : 'btn-info' ?>">Semester 2</a>
+    </div>
+</div>
+
+<table id="studentTable" class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <?php foreach ($subjects as $subject_name) : ?>
+                <th class="bg-warning text-black"><?= htmlspecialchars($subject_name) ?></th>
+            <?php endforeach; ?>
+            <th class="bg-success text-white" style="width:180px;">Average</th>
+            <!-- <th style="width:180px;">Action</th> -->
+        </tr>
+    </thead>
+    <tbody>
+        <?php 
+        $current_gender = '';
+        while ($student = $result_students->fetch_assoc()) : 
+            if ($student['gender'] !== $current_gender) {
+                $current_gender = $student['gender'];
+                echo "<tr class='table-secondary'><td colspan='100%' class='text-center'><strong>" . htmlspecialchars($current_gender) . "</strong></td></tr>";
+            }
+            $student_id = $student['id'];
+            $total_grade = 0;
+            $num_subjects = 0;
+        ?>
+            <tr>
+                <td><?= htmlspecialchars($student['first_name'] . " " . $student['middle_name'] . " " . $student['last_name']) ?></td>
+
+                <?php 
+                foreach ($subjects as $subject_id => $subject_name) {
+                    // Fetch grades for each subject
+                    $sql_grade = "SELECT grade FROM grades WHERE student_id = ? AND subject_id = ? AND semester = ? AND section_id = ?";
+                    $stmt_grade = $conn->prepare($sql_grade);
+                    $stmt_grade->bind_param("iiii", $student_id, $subject_id, $selected_semester, $section_id);
+                    $stmt_grade->execute();
+                    $result_grade = $stmt_grade->get_result();
+                    $grade = $result_grade->fetch_assoc()['grade'] ?? 0;
+
+                    // Calculate total for average
+                    if ($grade !== 'N/A') {
+                        $total_grade += $grade;
+                        $num_subjects++;
+                    }
+
+                    // Highlight failing grades (assuming below 75 is failing)
+                    $grade_class = ($grade !== 'N/A' && $grade < 75) ? 'text-danger' : '';
+                    echo "<td class='$grade_class'>" . htmlspecialchars($grade) . "</td>";
+                    $stmt_grade->close();
+                }
+                ?>
+
+                <td class="bg-success text-white">
+                    <?= ($num_subjects > 0) ? round($total_grade / $num_subjects, 2) : 'N/A' ?>
                 </td>
-              </tr>
-            <?php endwhile; ?>
-          </tbody>
-        </table>
+
+                <!-- <td>
+                    <a href="student_grade.php?student_id=<?= $student_id ?>" class="btn btn-primary">View Grades</a>
+                </td> -->
+            </tr>
+        <?php endwhile; ?>
+    </tbody>
+</table>
+
+<?php $conn->close(); ?>
   </div>
 
   <script src="../../assets/js/bootstrap5/bootstrap.bundle.min.js"></script>
