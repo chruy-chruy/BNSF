@@ -208,24 +208,35 @@ $selected_semester = $_GET['semester'] ?? 1;
 
                 <?php 
                 foreach ($subjects as $subject_id => $subject_name) {
-                    // Fetch grades for each subject
+                    $total_grade = 0;
+                    $num_subjects = 0;
+                    
                     $sql_grade = "SELECT grade FROM grades WHERE student_id = ? AND subject_id = ? AND semester = ? AND section_id = ?";
                     $stmt_grade = $conn->prepare($sql_grade);
                     $stmt_grade->bind_param("iiii", $student_id, $subject_id, $selected_semester, $section_id);
                     $stmt_grade->execute();
                     $result_grade = $stmt_grade->get_result();
-                    $grade = $result_grade->fetch_assoc()['grade'] ?? 0;
-
-                    // Calculate total for average
-                    if ($grade !== 'N/A') {
-                        $total_grade += $grade;
-                        $num_subjects++;
+                    
+                    while ($row = $result_grade->fetch_assoc()) {
+                        $grade_value = $row['grade'] ?? 0;
+                    
+                        // Ensure the grade is numeric before adding
+                        if (is_numeric($grade_value) && $grade_value !== 'N/A') {
+                            $total_grade += $grade_value;
+                            $num_subjects++;
+                        }
                     }
-
-                    // Highlight failing grades (assuming below 75 is failing)
-                    $grade_class = ($grade !== 'N/A' && $grade < 75) ? 'text-danger' : '';
-                    echo "<td class='$grade_class'>" . htmlspecialchars($grade) . "</td>";
+                    
                     $stmt_grade->close();
+                    
+                    // Calculate average grade
+                    $grade = ($num_subjects > 0) ? ($total_grade / $num_subjects) : 0;
+                    
+                    // Highlight failing grades (assuming below 75 is failing)
+                    $grade_class = ($grade < 75) ? 'text-danger' : '';
+                    
+                    echo "<td class='$grade_class'>" . htmlspecialchars(number_format($grade)) . "</td>";
+                    
                 }
                 ?>
 

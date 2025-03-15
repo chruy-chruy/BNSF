@@ -162,7 +162,7 @@ if (!function_exists('getGrade')) {
               <?php 
               $first_quarter = getGrade($conn, $row['id'], $section_id, $subject_id, $selected_semester, 1);
               $second_quarter = getGrade($conn, $row['id'], $section_id, $subject_id, $selected_semester, 2);
-              $fg = ($first_quarter !== '' && $second_quarter !== '') ? round(($first_quarter + $second_quarter) / 2, 2) : '';
+              $fg = ($first_quarter !== '' && $second_quarter !== '') ? round(($first_quarter + $second_quarter) / 2) : '';
               $remarks = ($fg !== '' && $fg >= 75) ? 'PASSED' : 'FAILED';
               ?>
 
