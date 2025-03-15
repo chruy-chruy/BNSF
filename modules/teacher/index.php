@@ -85,7 +85,6 @@ $result = mysqli_query($conn, $query);
 <table id="teacherTable" class="table table-striped table-hover">
   <thead>
     <tr>
-      <th>ID</th>
       <th>Full Name</th>
       <th>Email</th>
       <th class="text-end">Actions</th>
@@ -99,7 +98,6 @@ $result = mysqli_query($conn, $query);
         $full_name = $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name'];
     ?>
     <tr>
-      <td><?php echo $id; ?></td>
       <td><?php echo $full_name; ?></td>
       <td><?php echo $row['email']; ?></td>
       <td class="text-end">

@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $subject_id = intval($_POST['subject_id']);
     $grade_level = intval($_POST['grade_level']);
     $section_id = intval($_POST['section_id']);
-    $semester = 1; // Adjust if semester is dynamic
+    $semester = intval($_POST['semester']);; // Adjust if semester is dynamic
 
     if ($student_id && $quarter && $grade >= 0) {
         // Check if a grade already exists

@@ -7,8 +7,34 @@ include "../../navbar_teacher.php";
 $teacher_id = $_SESSION['id'];
 $section_id = intval($_GET['section_id']);
 $subject_id = intval($_GET['subject_id']);
+$subject_name = $_GET['subject_name'];
 $selected_grade_level = isset($_GET['grade_level']) ? intval($_GET['grade_level']) : null;
-$selected_semester = $_GET['semester'] ?? 1;
+
+// Check if there are 2 semesters
+$sql_semseter = "SELECT `id`, `section`, `subject`, `type`, `semester`, `school_year`, `grade_level` 
+                 FROM `schedule_subject` 
+                 WHERE section = ? AND subject = ? 
+                 ORDER BY semester DESC";
+$stmt_semseter = $conn->prepare($sql_semseter);
+$stmt_semseter->bind_param("ii", $section_id, $subject_id);
+$stmt_semseter->execute();
+$result_semseter = $stmt_semseter->get_result();
+
+// Check if there is more than one result (i.e., more than one semester)
+if ($result_semseter->num_rows > 1) {
+    $check_semester = true;
+    
+// Define selected semester based on the URL parameter (default to 1 if not set)
+$selected_semester = isset($_GET['semester']) ? intval($_GET['semester']) : 1;
+} else {
+    $check_semester = false;
+    if ($row = $result_semseter->fetch_assoc()) {
+        $semester = $row['semester']; // Fetch semester value from the first row
+        
+// Define selected semester based on the URL parameter (default to 1 if not set)
+$selected_semester = $row['semester']; 
+    }
+}
 
 // Get section name
 $sql_section_name = "SELECT name FROM strand WHERE id = ?";
@@ -42,6 +68,7 @@ if (!function_exists('getGrade')) {
         return $result_grades->fetch_assoc()['grade'] ?? '';
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -54,20 +81,65 @@ if (!function_exists('getGrade')) {
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
+<style>
+      .schedule-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+</style>
 </head>
 <body>
 
 <div class="content">
-    <h1>Student Grades - <?= htmlspecialchars($section) ?></h1>
-    <a href="index.php" class="btn btn-secondary mb-3">Back to Sections</a>
+<div class="schedule-header">
+      <h2>Grades</h2>
+</div>
+    <a href="index.php" class="btn btn-secondary mb-3">Back</a>
 
-    <div class="semester-buttons mb-3">
-        <a href="?section_id=<?= $section_id ?>&subject_id=<?= $subject_id ?>&grade_level=<?= $selected_grade_level ?>&semester=1" 
-           class="btn <?= $selected_semester == 1 ? 'btn-primary' : 'btn-info' ?>">Semester 1</a>
-        <a href="?section_id=<?= $section_id ?>&subject_id=<?= $subject_id ?>&grade_level=<?= $selected_grade_level ?>&semester=2" 
-           class="btn <?= $selected_semester == 2 ? 'btn-primary' : 'btn-info' ?>">Semester 2</a>
+    <br>
+    <div class="row mb-1">
+    <div class="col-md-6 d-flex align-items-center gap-2">
+        <label for="student_name" class="form-label m-0" style="white-space: nowrap;">Subject Name:</label>
+        <input type="text" class="form-control form-control-sm bg-transparent border-0" id="student_name" 
+               value="<?= htmlspecialchars($subject_name) ?>" readonly>
     </div>
+    <div class="col-md-6 d-flex align-items-center gap-2">
+        <label for="section_name" class="form-label m-0" style="white-space: nowrap;">Grade Level:</label>
+        <input type="text" class="form-control form-control-sm bg-transparent border-0" id="section_name" 
+               value="<?= htmlspecialchars($selected_grade_level) ?>" readonly>
+    </div>
+</div>
+
+<div class="row mb-1">
+    <div class="col-md-6 d-flex align-items-center gap-2">
+        <label for="student_lrn" class="form-label m-0" style="white-space: nowrap;">Section Name:</label>
+        <input type="text" class="form-control form-control-sm bg-transparent border-0" id="student_lrn" 
+               value="<?= htmlspecialchars($section) ?>" readonly>
+    </div>
+    <div class="col-md-6 d-flex align-items-center gap-2">
+        <label for="grade_level" class="form-label m-0" style="white-space: nowrap;">Semester:</label>
+        <input type="text" class="form-control form-control-sm bg-transparent border-0" id="grade_level" 
+               value="<?= htmlspecialchars($selected_semester) ?>" readonly>
+    </div>
+</div>
+<hr>
+
+<div class="semester-buttons mb-3">
+    <?php if ($result_semseter->num_rows == 1) {
+    ?>
+        <a href="?section_id=<?= $section_id ?>&subject_id=<?= $subject_id ?>&subject_name=<?= $subject_name ?>&grade_level=<?= $selected_grade_level ?>&semester=<?= $semester ?>" 
+           class="btn btn-primary">Semester <?= $semester ?></a>
+    <?php } else { ?>
+        <a href="?section_id=<?= $section_id ?>&subject_id=<?= $subject_id ?>&subject_name=<?= $subject_name ?>&grade_level=<?= $selected_grade_level ?>&semester=1" 
+           class="btn <?= ($selected_semester == 1) ? 'btn-primary' : 'btn-info' ?>">Semester 1</a>
+
+        <a href="?section_id=<?= $section_id ?>&subject_id=<?= $subject_id ?>&subject_name=<?= $subject_name ?>&grade_level=<?= $selected_grade_level ?>&semester=2" 
+           class="btn <?= ($selected_semester == 2) ? 'btn-primary' : 'btn-info' ?>">Semester 2</a>
+    <?php } ?>
+</div>
+
+
+
 
     <?php if ($result_students->num_rows > 0): ?>
       <table id="studentTable" class="table table-bordered table-striped">
@@ -97,7 +169,7 @@ if (!function_exists('getGrade')) {
 <td>
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editGradeModal"
         data-student-id="<?= $row['id'] ?>" data-quarter="1" data-grade="<?= $first_quarter ?>"
-        data-subject-id="<?= $subject_id ?>" data-grade-level="<?= $selected_grade_level ?>">
+        data-subject-id="<?= $subject_id ?>" data-grade-level="<?= $selected_grade_level ?>" data-semester="<?= $selected_semester ?>">
         <?= $first_quarter !== '' ? htmlspecialchars($first_quarter) : '-' ?>
     </button>
 </td>
@@ -105,7 +177,7 @@ if (!function_exists('getGrade')) {
 <td>
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editGradeModal"
         data-student-id="<?= $row['id'] ?>" data-quarter="2" data-grade="<?= $second_quarter ?>"
-        data-subject-id="<?= $subject_id ?>" data-grade-level="<?= $selected_grade_level ?>">
+        data-subject-id="<?= $subject_id ?>" data-grade-level="<?= $selected_grade_level ?>" data-semester="<?= $selected_semester ?>">
         <?= $second_quarter !== '' ? htmlspecialchars($second_quarter) : '-' ?>
     </button>
 </td>
@@ -137,10 +209,14 @@ if (!function_exists('getGrade')) {
           <input type="hidden" id="subjectId" name="subject_id">
           <input type="hidden" id="gradeLevel" name="grade_level">
           <input type="hidden" id="sectionId" name="section_id">
+          <input type="hidden" id="semester" name="semester">
           
           <div class="mb-3">
             <label for="gradeInput" class="form-label">Grade</label>
-            <input type="number" class="form-control" id="gradeInput" name="grade">
+            <input type="number" class="form-control" id="gradeInput" name="grade" min="0" max="100">
+            <script>document.getElementById('gradeInput').addEventListener('input', function (e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 3); // Allows only numbers, max 13 digits
+});</script>
           </div>
           <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
@@ -161,10 +237,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('gradeInput').value = button.getAttribute('data-grade');
         document.getElementById('subjectId').value = button.getAttribute('data-subject-id');
         document.getElementById('gradeLevel').value = button.getAttribute('data-grade-level');
+        document.getElementById('semester').value = button.getAttribute('data-semester');
 
         // Get section_id from URL and set it in the form
         var urlParams = new URLSearchParams(window.location.search);
         document.getElementById('sectionId').value = urlParams.get('section_id');
+        // document.getElementById('semester').value = urlParams.get('semester');
     });
 
     document.getElementById('updateGradeForm').addEventListener('submit', function (e) {
