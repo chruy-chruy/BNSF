@@ -154,13 +154,16 @@ $stmt_students->bind_param("iii", $grade_level, $section_id, $section_id);
 $stmt_students->execute();
 $result_students = $stmt_students->get_result();
 
+
+$selected_semester = $_GET['semester'] ?? 1;
+
 // Fetch subjects assigned to the selected section from the schedule_subject table
 $sql_subjects = "SELECT DISTINCT subject.id, subject.code FROM subject
                  JOIN schedule_subject ON subject.id = schedule_subject.subject
-                 WHERE schedule_subject.section = ?
+                 WHERE schedule_subject.section = ? AND schedule_subject.semester = ?
                  ORDER BY subject.id ASC";
 $stmt_subjects = $conn->prepare($sql_subjects);
-$stmt_subjects->bind_param("i", $section_id);
+$stmt_subjects->bind_param("ii", $section_id, $selected_semester);
 $stmt_subjects->execute();
 $result_subjects = $stmt_subjects->get_result();
 
@@ -169,7 +172,6 @@ while ($subject = $result_subjects->fetch_assoc()) {
     $subjects[$subject['id']] = $subject['code'];
 }
 
-$selected_semester = $_GET['semester'] ?? 1;
 ?>
 
 <div class="schedule-header">

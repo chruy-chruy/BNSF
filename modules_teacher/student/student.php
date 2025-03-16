@@ -163,10 +163,14 @@ if (!function_exists('getGrade')) {
               $first_quarter = getGrade($conn, $row['id'], $section_id, $subject_id, $selected_semester, 1);
               $second_quarter = getGrade($conn, $row['id'], $section_id, $subject_id, $selected_semester, 2);
               $fg = ($first_quarter !== '' && $second_quarter !== '') ? round(($first_quarter + $second_quarter) / 2) : '';
-              $remarks = ($fg !== '' && $fg >= 75) ? 'PASSED' : 'FAILED';
+
+              $remarks = ($fg >= 75) ? 'PASSED' : 'FAILED';
+              if($fg === ''){
+                $remarks = '';
+              }
               ?>
 
-<td>
+<!-- <td>
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editGradeModal"
         data-student-id="<?= $row['id'] ?>" data-quarter="1" data-grade="<?= $first_quarter ?>"
         data-subject-id="<?= $subject_id ?>" data-grade-level="<?= $selected_grade_level ?>" data-semester="<?= $selected_semester ?>">
@@ -180,7 +184,77 @@ if (!function_exists('getGrade')) {
         data-subject-id="<?= $subject_id ?>" data-grade-level="<?= $selected_grade_level ?>" data-semester="<?= $selected_semester ?>">
         <?= $second_quarter !== '' ? htmlspecialchars($second_quarter) : '-' ?>
     </button>
+</td> -->
+
+<td>
+    <input type="number" class="form-control grade-input" 
+        data-student-id="<?= $row['id'] ?>" 
+        data-quarter="1" 
+        data-subject-id="<?= $subject_id ?>" 
+        data-grade-level="<?= $selected_grade_level ?>" 
+        data-semester="<?= $selected_semester ?>"
+        data-section-id="<?= $section_id ?>"
+        value="<?= $first_quarter !== '' ? htmlspecialchars($first_quarter) : '' ?>" 
+        min="0" max="100">
 </td>
+
+<td>
+    <input type="number" class="form-control grade-input" 
+        data-student-id="<?= $row['id'] ?>" 
+        data-quarter="2" 
+        data-subject-id="<?= $subject_id ?>" 
+        data-grade-level="<?= $selected_grade_level ?>" 
+        data-semester="<?= $selected_semester ?>"
+        data-section-id="<?= $section_id ?>"
+        value="<?= $second_quarter !== '' ? htmlspecialchars($second_quarter) : '' ?>" 
+        min="0" max="100">
+</td>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.grade-input').forEach(input => {
+        input.addEventListener('change', function () {
+            let studentId = this.dataset.studentId;
+            let quarter = this.dataset.quarter;
+            let subjectId = this.dataset.subjectId;
+            let gradeLevel = this.dataset.gradeLevel;
+            let semester = this.dataset.semester;
+            let sectionId = this.dataset.sectionId;
+            let grade = this.value;
+            
+            // Ensure grade is within valid range
+            if (grade < 0 || grade > 100) {
+                alert('Grade must be between 0 and 100.');
+                this.value = ''; // Reset input
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append('student_id', studentId);
+            formData.append('quarter', quarter);
+            formData.append('subject_id', subjectId);
+            formData.append('grade_level', gradeLevel);
+            formData.append('semester', semester);
+            formData.append('grade', grade);
+            formData.append('section_id', sectionId);
+
+
+            fetch(`update_grade.php`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            location.reload();
+            alert(data);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    });
+});
+</script>
+
 
 <td><?= ($fg !== '') ? htmlspecialchars($fg) : '-' ?></td>
 
@@ -195,7 +269,7 @@ if (!function_exists('getGrade')) {
 </div>
 
 <!-- Modal for Editing Grades -->
-<div class="modal fade" id="editGradeModal" tabindex="-1" aria-labelledby="editGradeLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="editGradeModal" tabindex="-1" aria-labelledby="editGradeLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -261,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => console.error('Error:', error));
     });
-});
+}); -->
 
 </script>
 
