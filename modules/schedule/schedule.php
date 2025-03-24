@@ -247,8 +247,8 @@ for ($i = 0; $i < 5; $i++) { // Generate 5 years of options
             <td>
               <select name="schedule[<?php echo $day; ?>][]" class="form-select" required>
                 <option value="" hidden><?php echo $daySchedule ?: 'Select'; ?></option>
-                <option value="break" <?php echo ($daySchedule == 'break') ? 'selected' : ''; ?>>Break</option>
-                <option value="lunch" <?php echo ($daySchedule == 'lunch') ? 'selected' : ''; ?>>Lunch</option>
+                <option value="Break" <?php echo ($daySchedule == 'Break') ? 'selected' : ''; ?>>Break</option>
+                <option value="Lunch" <?php echo ($daySchedule == 'Lunch') ? 'selected' : ''; ?>>Lunch</option>
                 <?php foreach ($subjects as $subject): ?>
                   <option value="<?php echo $subject['id']; ?>" <?php echo ($daySchedule == $subject['id']) ? 'selected' : ''; ?>>
                     <?php echo $subject['code']; ?>
@@ -646,7 +646,12 @@ document.addEventListener("DOMContentLoaded", function () {
       row.remove();
     }
   });
+
+  
 </script>
+
+
+
 <!-- DataTable JS and Bootstrap 5 JS -->
 <script src="../../assets/js/DataTables/jquery.min.js"></script>
 <script src="../../assets/js/DataTables/jquery.dataTables.min.js"></script>

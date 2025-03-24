@@ -5,8 +5,8 @@ include "../../navbar_teacher.php";
 
 
 $teacher_id = $_SESSION['id'];
-$section_id = intval($_GET['section_id']);
-$subject_id = intval($_GET['subject_id']);
+$section_id = $_GET['section_id'];
+$subject_id = $_GET['subject_id'];
 $subject_name = $_GET['subject_name'];
 $selected_grade_level = isset($_GET['grade_level']) ? intval($_GET['grade_level']) : null;
 
@@ -80,7 +80,7 @@ if (!function_exists('getGrade')) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../assets/css/navbar.css">
   <link rel="stylesheet" href="../../assets/css/styles.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
 <style>
       .schedule-header {
       text-align: center;
@@ -212,6 +212,7 @@ if (!function_exists('getGrade')) {
 
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.grade-input').forEach(input => {
         input.addEventListener('change', function () {
@@ -221,11 +222,11 @@ document.addEventListener('DOMContentLoaded', function () {
             let gradeLevel = this.dataset.gradeLevel;
             let semester = this.dataset.semester;
             let sectionId = this.dataset.sectionId;
-            let grade = this.value;
-            
+            let grade = this.value.trim();
+
             // Ensure grade is within valid range
-            if (grade < 0 || grade > 100) {
-                alert('Grade must be between 0 and 100.');
+            if (grade === "" || isNaN(grade) || grade < 0 || grade > 100) {
+                alert('Grade must be a number between 0 and 100.');
                 this.value = ''; // Reset input
                 return;
             }
@@ -239,20 +240,26 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('grade', grade);
             formData.append('section_id', sectionId);
 
+            // Disable input to prevent multiple triggers
+            this.disabled = true;
 
             fetch(`update_grade.php`, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            location.reload();
-            alert(data);
-        })
-        .catch(error => console.error('Error:', error));
-    });
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // alert(data); // Show message first
+                setTimeout(() => location.reload(), 500); // Reload after 0.5s
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                this.disabled = false; // Re-enable input after request completes
+            });
+        }, { once: true }); // Ensures event runs only ONCE per element
     });
 });
+
 </script>
 
 

@@ -110,6 +110,7 @@ if (alert) {
       <div class="col-md-6">
         <label for="lrn" class="form-label required">LRN</label>
         <input type="text" class="form-control" id="lrn" name="lrn" required 
+        maxlength="13" pattern="\d{13}" title="LRN must be exactly 13 digits"
         value="<?php echo $student['lrn']; ?>">
       </div>
 
@@ -186,11 +187,13 @@ if (alert) {
       <div class="col-md-6">
         <label for="contact" class="form-label required">Contact</label>
         <input type="text" class="form-control" id="contact" name="contact" required
+         maxlength="11" pattern="\d{11}" title="LRN must be exactly 11 digits"
         value="<?php echo $student['contact']; ?>">
       </div>
       <script>document.getElementById('contact').addEventListener('input', function (e) {
-    this.value = this.value.replace(/\D/g, '').slice(0, 11); // Allows only numbers, max 13 digits
+    this.value = this.value.replace(/\D/g, '').slice(0, 11); // Allows only numbers, max 11 digits
 });</script>
+
       <div class="col-md-6">
         <label for="email" class="form-label required">Email</label>
         <input type="email" class="form-control" id="email" name="email" required

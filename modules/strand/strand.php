@@ -25,7 +25,7 @@ $track = $_GET['track'];
 </head>
 <body>
 <?php 
-$page = "Strand/$track";
+$page = "Strand";
 
 include "../../db_conn.php";
  ?>
@@ -42,6 +42,8 @@ include "../../db_conn.php";
 
   <!-- Add Teacher Button -->
 <a href="add.php?track=<?php echo $track;?>" class="btn btn-success mb-3">Add Strand</a>
+<a href="print.php?track=<?php echo $track; ?>" style="float:right;" class="btn btn-success mb-3" target="_blank">Print</a>
+
 <div class="container mt-4">
 
 <?php if (isset($message)): ?>

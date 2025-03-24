@@ -8,22 +8,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $subject_id = intval($_POST['subject_id']);
     $grade_level = intval($_POST['grade_level']);
     $section_id = intval($_POST['section_id']);
-    $semester = intval($_POST['semester']);; // Adjust if semester is dynamic
+    $semester = intval($_POST['semester']);
 
     if ($student_id && $quarter && $grade >= 0) {
         // Check if a grade already exists
-        $sql_check = "SELECT id FROM grades WHERE student_id = ? AND semester = ? AND section_id = ? AND quarter = ?";
+        $sql_check = "SELECT id FROM grades WHERE student_id = ? AND semester = ? AND section_id = ? AND quarter = ? AND grade_level = ? AND subject_id = ?";
         $stmt_check = $conn->prepare($sql_check);
-        $stmt_check->bind_param("iiii", $student_id, $semester, $section_id, $quarter);
+        $stmt_check->bind_param("iiiiii", $student_id, $semester, $section_id, $quarter, $grade_level, $subject_id);
         $stmt_check->execute();
         $result_check = $stmt_check->get_result();
-        $stmt_check->close();
+        $existing_grade = $result_check->fetch_assoc(); // Fetch the existing row
+        $stmt_check->close(); // Close AFTER fetching result
 
-        if ($result_check->num_rows > 0) {
-            // Update existing grade
-            $sql_update = "UPDATE grades SET grade = ?, updated_at = NOW() WHERE student_id = ? AND semester = ? AND section_id = ? AND quarter = ?";
+        if ($existing_grade) { // If a record exists, update it
+            $sql_update = "UPDATE grades SET grade = ?, updated_at = NOW() WHERE id = ?";
             $stmt_update = $conn->prepare($sql_update);
-            $stmt_update->bind_param("diiii", $grade, $student_id, $semester, $section_id, $quarter);
+            $stmt_update->bind_param("di", $grade, $existing_grade['id']);
             if ($stmt_update->execute()) {
                 echo "Grade updated successfully!";
             } else {
@@ -47,5 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Invalid input data.";
     }
 }
+
 $conn->close();
 ?>

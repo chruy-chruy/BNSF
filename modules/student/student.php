@@ -67,27 +67,8 @@ include "../../db_conn.php";
     <!-- Add Student Button -->
 <a href="add.php?grade=<?php echo $grade;?>" class="btn btn-success mb-3">Add Student</a>
   <!-- Print Button -->
-  <a href="javascript:printTable()" class="btn btn-primary mb-3">Print</a>
-<script>
-  function printTable() {
-    var printContent = document.getElementById('studentTable').outerHTML;
+  <a href="print.php?grade=<?php echo $grade; ?>" style="float:right;" class="btn btn-success mb-3" target="_blank">Print</a>
 
-    // Remove the Action column from the print view
-    printContent = printContent.replace(/<th class="text-end">Actions<\/th>/, ''); // Remove header column
-    printContent = printContent.replace(/<td class="text-end">.*?<\/td>/g, ''); // Remove data cells in Action column
-
-    var printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><title>Student List</title>');
-    printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">');
-    printWindow.document.write('<style>@media print {#studentTable th.text-end,#studentTable td.text-end {display: none;}}</style>');
-    printWindow.document.write('</head><body>');
-    printWindow.document.write('<h1>Student List</h1>');  // Set the title as 'Student List'
-    printWindow.document.write('<table class="table table-striped table-hover">' + printContent + '</table>');
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.print();
-  }
-</script>
 
 <div class="container mt-4">
 

@@ -62,9 +62,26 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 header("Location: index.php?error=Incorrect username or password.&role=$role");
             exit();
             }
-        } else {
-            header("Location: index.php?error=Incorrect username or password.&role=$role");
-            exit();
+        }    else{
+            $sql = "SELECT * FROM user WHERE username='$uname' AND password='$pass'";
+            $result = mysqli_query($conn, $sql);
+            if (mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
+                if ($row['username'] === $uname && $row['password'] === $pass) {
+                    $_SESSION['username'] = $row['username'];
+                    $_SESSION['id'] = $row['id'];
+                    $_SESSION['role'] = $row['role'];
+                    header("Location: modules/dashboard/");
+                    exit();
+                }
+                else{
+                    header("Location: index.php?error=Incorrect username or password.&role=$role");
+                exit();
+                }
+            } else {
+                header("Location: index.php?error=Incorrect username or password.&role=$role");
+                exit();
+            }
         }
     }else if($role == "teacher") {
         $sql = "SELECT * FROM teacher WHERE username='$uname' AND password='$pass' AND del_status != 'deleted'";
@@ -82,30 +99,26 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 header("Location: index.php?error=Incorrect username or password.&role=$role");
             exit();
             }
-        } else {
-            header("Location: index.php?error=server error.&role=$role");
-            exit();
-        }
-    }
-    else{
-        $sql = "SELECT * FROM user WHERE username='$uname' AND password='$pass'";
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            if ($row['username'] === $uname && $row['password'] === $pass) {
-                $_SESSION['username'] = $row['username'];
-                $_SESSION['id'] = $row['id'];
-                $_SESSION['role'] = $row['role'];
-                header("Location: modules/dashboard/");
+        }     else{
+            $sql = "SELECT * FROM user WHERE username='$uname' AND password='$pass'";
+            $result = mysqli_query($conn, $sql);
+            if (mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
+                if ($row['username'] === $uname && $row['password'] === $pass) {
+                    $_SESSION['username'] = $row['username'];
+                    $_SESSION['id'] = $row['id'];
+                    $_SESSION['role'] = $row['role'];
+                    header("Location: modules/dashboard/");
+                    exit();
+                }
+                else{
+                    header("Location: index.php?error=Incorrect username or password.&role=$role");
+                exit();
+                }
+            } else {
+                header("Location: index.php?error=Incorrect username or password.&role=$role");
                 exit();
             }
-            else{
-                header("Location: index.php?error=Incorrect username or password.&role=$role");
-            exit();
-            }
-        } else {
-            header("Location: index.php?error=Incorrect username or password.&role=$role");
-            exit();
         }
     }
 }

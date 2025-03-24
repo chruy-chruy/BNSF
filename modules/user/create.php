@@ -10,7 +10,7 @@ $role = $_POST['role'];
 
 
 // Check if the teacher already exists (based on email or ID)
-$check_query = mysqli_query($conn, "SELECT * FROM `user` WHERE username = '$username' OR `role` = '$role'");
+$check_query = mysqli_query($conn, "SELECT * FROM `user` WHERE username = '$username' AND `role` = '$role'");
 
 $existing = null; 
 while ($row = mysqli_fetch_array($check_query)) {

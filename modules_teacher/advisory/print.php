@@ -1,8 +1,5 @@
 <?php
 include "../../db_conn.php";
-$page = 'Advisory';
-include "../../navbar_teacher.php";
-
 
 $student_id = $_GET['student_id'];
 
@@ -67,66 +64,64 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Grades</title>
-    <link rel="stylesheet" href="../../assets/css/navbar.css">
-    <link rel="stylesheet" href="../../assets/css/bootstrap5.3.0/bootstrap.min.css">
-    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <title>Print Report Card</title>
     <style>
-        .info-box {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #dee2e6;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            display: flex;
+            flex-direction: row;
+            font-size: 12px;
         }
-        .info-box label {
+        .column {
+            width: 50%;
+            /* padding-right: 50px; */
+        }
+        .column1 {
+            width: 50%;
+            padding-right: 50px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 4px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .section-title {
+            text-align: center;
             font-weight: bold;
-            margin-bottom: 2px;
+            margin-top: 10px;
         }
-        .info-box input {
-            border: none;
-            background: transparent;
-            font-weight: bold;
+        @media print {
+               @page {
+        size: A4 landscape;
+         margin: 10mm; 
+    }
+            body {
+                margin: 0;
+                display: flex;
+                flex-direction: row;
+            }
+            .text-start {
+    text-align: left;
+    padding-left: 5px; /* Optional: Adds spacing for better alignment */
+}
+            
         }
-    
+
     </style>
 </head>
 <body>
-
-    <div class="content" id="content">
-        <h2 class="text-center">Student Grades</h2>
-        <br>
-        <a href="index.php" class="btn btn-secondary mb-3">
-    <i class="bi bi-arrow-left"></i> Back
-</a>
-    <div class="row mb-1">
-    <div class="col-md-6 d-flex align-items-center gap-2">
-        <label for="student_name" class="form-label m-0" style="white-space: nowrap;">Student Name:</label>
-        <input type="text" class="form-control form-control-sm bg-transparent border-0" id="student_name" 
-               value="<?php echo $student_name; ?>" readonly>
-    </div>
-    <div class="col-md-6 d-flex align-items-center gap-2">
-        <label for="section_name" class="form-label m-0" style="white-space: nowrap;">Section Name:</label>
-        <input type="text" class="form-control form-control-sm bg-transparent border-0" id="section_name" 
-               value="<?php echo $section_name; ?>" readonly>
-    </div>
-</div>
-
-<div class="row mb-1">
-    <div class="col-md-6 d-flex align-items-center gap-2">
-        <label for="student_lrn" class="form-label m-0" style="white-space: nowrap;">Student LRN:</label>
-        <input type="text" class="form-control form-control-sm bg-transparent border-0" id="student_lrn" 
-               value="<?php echo $student_lrn; ?>" readonly>
-    </div>
-    <div class="col-md-6 d-flex align-items-center gap-2">
-        <label for="grade_level" class="form-label m-0" style="white-space: nowrap;">Grade Level:</label>
-        <input type="text" class="form-control form-control-sm bg-transparent border-0" id="grade_level" 
-               value="<?php echo $grade_level; ?>" readonly>
-    </div>
-</div>
-<br>
-<hr>
-<!-- Grades Tables -->
+    <div class="column1">
+        <h2 class="section-title">Report on Learning Progress and Achievement</h2>
+       <!-- Grades Tables -->
 <?php foreach ([1 => "First Semester", 2 => "Second Semester"] as $semester => $semester_name): ?>
     <?php if (!empty($grades_by_semester[$semester])): ?>
         <h3 class="text-center"><?php echo strtoupper($semester_name); ?></h3>
@@ -147,7 +142,7 @@ $conn->close();
             <!-- CORE SUBJECTS -->
             <tbody>
                 <tr>
-                    <th colspan="4" class="text-start">CORE SUBJECTS</th>
+                    <th colspan="4" class="text-start"  style="background-color:rgb(179, 179, 230);">CORE SUBJECTS</th>
                 </tr>
                 <?php
                 $total_grade = 0;
@@ -176,7 +171,7 @@ $conn->close();
                         }
                 ?>
                     <tr>
-                        <td><?php echo $entries[0]['subject_code']; ?> (<?php echo $entries[0]['subject_details']; ?>)</td>
+                        <td class="text-start" ><?php echo $entries[0]['subject_code']; ?> (<?php echo $entries[0]['subject_details']; ?>)</td>
                         <td><?php echo $quarter1; ?></td>
                         <td><?php echo $quarter2; ?></td>
                         <td><?php echo $final_average; ?></td>
@@ -185,7 +180,7 @@ $conn->close();
                 
                 <!-- APPLIED & SPECIALIZED SUBJECTS -->
                 <tr>
-                    <th colspan="4" class="text-start">APPLIED AND SPECIALIZED SUBJECTS</th>
+                    <th colspan="4" class="text-start" style="background-color:rgb(179, 179, 230);">APPLIED AND SPECIALIZED SUBJECTS</th>
                 </tr>
                 <?php
                 foreach ($grades_by_semester[$semester] as $subject => $entries):
@@ -212,7 +207,7 @@ $conn->close();
                         }
                 ?>
                     <tr>
-                        <td><?php echo $entries[0]['subject_code']; ?> (<?php echo $entries[0]['subject_details']; ?>)</td>
+                        <td class="text-start" ><?php echo $entries[0]['subject_code']; ?> (<?php echo $entries[0]['subject_details']; ?>)</td>
                         <td><?php echo $quarter1; ?></td>
                         <td><?php echo $quarter2; ?></td>
                         <td><?php echo $final_average; ?></td>
@@ -231,7 +226,6 @@ $conn->close();
             </tbody>
         </table>
         <br>
-        <hr>
     <?php else: ?>
         <h3 class="text-center"><?php echo strtoupper($semester_name); ?></h3>
         <p class="text-center text-muted">No grades available for this semester.</p>
@@ -239,9 +233,77 @@ $conn->close();
     <?php endif; ?>
 <?php endforeach; ?>
 
-
     </div>
 
-    <script src="../../assets/js/bootstrap5/bootstrap.bundle.min.js"></script>
+    <div class="column">
+        <h2 class="section-title">Report on Learner's Observed Values</h2>
+        <table>
+            <tr>
+                <th>Core Values</th>
+                <th>Behavior Statements</th>
+                <th>Q1</th>
+                <th>Q2</th>
+                <th>Q3</th>
+                <th>Q4</th>
+            </tr>
+            <tr>
+                <td style="height:100px;" >Maka-Diyos</td>
+                <td style="width: 120px;">Expresses one's spiritual beliefs while respecting others</td>
+                <td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td style="height:100px;" >Makatao</td>
+                <td>Is sensitive to individual, social, and cultural differences</td>
+                <td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td style="height:100px;" >Makabansa</td>
+                <td>Demonstrates pride in being a Filipino</td>
+                <td></td><td></td><td></td><td></td>
+            </tr>
+        </table>
+        <br><br>
+        <h2 class="section-title">Learning Progress and Achievement</h2>
+        <table>
+            <tr>
+                <th>Descriptors</th>
+                <th>Grading Scale</th>
+                <th>Remarks</th>
+            </tr>
+            <tr>
+                <td>Outstanding</td>
+                <td>90 - 100</td>
+                <td>Passed</td>
+            </tr>
+            <tr>
+                <td>Very Satisfactory</td>
+                <td>85 - 89</td>
+                <td>Passed</td>
+            </tr>
+            <tr>
+                <td>Satisfactory</td>
+                <td>80 - 84</td>
+                <td>Passed</td>
+            </tr>
+            <tr>
+                <td>Fairly Satisfactory</td>
+                <td>75 - 79</td>
+                <td>Passed</td>
+            </tr>
+            <tr>
+                <td>Did Not Meet Expectations</td>
+                <td>Below 75</td>
+                <td>Failed</td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
+<script>
+    window.onload = function() {
+        window.print();
+        setTimeout(function() {
+            window.close(); // Automatically close the tab after printing
+        }, 1000);
+    };
+</script>

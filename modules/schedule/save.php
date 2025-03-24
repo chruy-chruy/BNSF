@@ -4,7 +4,6 @@ include "../../db_conn.php"; // Replace with your actual db connection file
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the 'from' and 'to' times (arrays, as you have multiple rows)
     $from = $_POST['from'];
     $to = $_POST['to'];
     $id = $_POST['id'];
@@ -15,80 +14,89 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sy = $_GET['sy'];
     $teacher = $_GET['teacher'];
 
-    // Get the schedule for each day (Monday to Friday)
+    // Get the schedule for each day
     $monday = $_POST['schedule']['Monday'];
     $tuesday = $_POST['schedule']['Tuesday'];
     $wednesday = $_POST['schedule']['Wednesday'];
     $thursday = $_POST['schedule']['Thursday'];
     $friday = $_POST['schedule']['Friday'];
 
-    // Get the section (passed from the form or URL)
-    
-    // Loop through the data and insert each row into the database
     for ($i = 0; $i < count($from); $i++) {
-        //check if the sched is already exist.
-        $queryId = $id[$i];
         $from1 = $from[$i];
         $to1 = $to[$i];
-        $moday1 = $monday[$i];
+
+        // **Step 1: Validate Time Order (`from` must be before `to`)**
+        if ($from1 >= $to1) {
+            header("location:schedule.php?message=Error! 'From' time must be earlier than 'To' time.&track=$track&section=$section&quarter=$quarter&grade=$grade&sy=$sy");
+            exit();
+        }
+
+        // **Step 2: Check for Overlapping Schedules in the Same Section**
+        $queryId = $id[$i];
+        $overlapQuery = "SELECT * FROM schedules 
+                         WHERE section = ? 
+                         AND id != ? 
+                         AND ((time_from < ? AND time_to > ?) -- Case: Overlap inside an existing schedule
+                         OR (time_from >= ? AND time_from < ?)) -- Case: Starts inside an existing schedule";
+        
+        $stmt = $conn->prepare($overlapQuery);
+        $stmt->bind_param("sissss", $section, $queryId, $to1, $from1, $from1, $to1);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // Found overlapping schedule
+            header("location:schedule.php?error=Error! Schedule conflicts with an existing time in this section.&track=$track&section=$section&quarter=$quarter&grade=$grade&sy=$sy");
+            exit();
+        }
+        $stmt->close();
+
+        $monday1 = $monday[$i];
         $tuesday1 = $tuesday[$i];
         $wednesday1 = $wednesday[$i];
         $thursday1 = $thursday[$i];
         $friday1 = $friday[$i];
 
-        if($queryId != 0){
+        // **Step 3: Update or Insert the Schedule**
+        if ($queryId != 0) {
             $query2 = "UPDATE `schedules` SET 
-            `time_from`='$from1',
-            `time_to`='$to1',
-            `monday`='$moday1',
-            `tuesday`='$tuesday1',
-            `wednesday`='$wednesday1',
-            `thursday`='$thursday1',
-            `friday`='$friday1',
-            `semester`='$quarter',
-            `adviser`='$teacher',
-            `school_year`='$sy'
-             WHERE id = '$queryId'";
-             
-             mysqli_query($conn, $query2);
-        }
-        else{
-        // Prepare the SQL query to insert data into the schedules table
-        $query = "INSERT INTO schedules (section, time_from, time_to, monday, tuesday, wednesday, thursday, friday, semester,school_year, grade_level,adviser) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
-        
-        // Prepare the statement
-        if ($stmt = $conn->prepare($query)) {
-            // Bind the parameters
-            $stmt->bind_param("ssssssssssss", 
-                $section,        // Section
-                $from[$i],       // From time
-                $to[$i],         // To time
-                $monday[$i],     // Monday
-                $tuesday[$i],    // Tuesday
-                $wednesday[$i],  // Wednesday
-                $thursday[$i],   // Thursday
-                $friday[$i],      // Friday
-                $quarter,        // quarter
-                $sy,        // quarter
-                $grade,        // quarter
-                $teacher
-            );
+                `time_from`='$from1',
+                `time_to`='$to1',
+                `monday`='$monday1',
+                `tuesday`='$tuesday1',
+                `wednesday`='$wednesday1',
+                `thursday`='$thursday1',
+                `friday`='$friday1',
+                `semester`='$quarter',
+                `adviser`='$teacher',
+                `school_year`='$sy'
+            WHERE id = '$queryId'";
 
-            // Execute the statement
-            if ($stmt->execute()) {
-                echo "Schedule row " . ($i + 1) . " inserted successfully.<br>";
-            } else {
-                echo "Error inserting schedule row " . ($i + 1) . ": " . $stmt->error . "<br>";
-            }
-
-            // Close the statement
-            $stmt->close();
+            mysqli_query($conn, $query2);
         } else {
-            echo "Error preparing the SQL query: " . $conn->error . "<br>";
+            $query = "INSERT INTO schedules (section, time_from, time_to, monday, tuesday, wednesday, thursday, friday, semester, school_year, grade_level, adviser) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            if ($stmt = $conn->prepare($query)) {
+                $stmt->bind_param("ssssssssssss", 
+                    $section, $from1, $to1, 
+                    $monday1, $tuesday1, $wednesday1, 
+                    $thursday1, $friday1, 
+                    $quarter, $sy, $grade, $teacher
+                );
+
+                if (!$stmt->execute()) {
+                    header("location:schedule.php?message=Error inserting schedule: " . $stmt->error);
+                    exit();
+                }
+                $stmt->close();
+            } else {
+                header("location:schedule.php?message=Error preparing the SQL query: " . $conn->error);
+                exit();
+            }
         }
     }
-    }
+
     header("location:schedule.php?message=Success! Schedule has been saved successfully.&track=$track&section=$section&quarter=$quarter&grade=$grade&sy=$sy");
 }
 ?>

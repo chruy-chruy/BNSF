@@ -190,7 +190,7 @@ while ($subject = $result_subjects->fetch_assoc()) {
                 <th class="bg-warning text-black"><?= htmlspecialchars($subject_name) ?></th>
             <?php endforeach; ?>
             <th class="bg-success text-white" style="width:180px;">Average</th>
-            <!-- <th style="width:180px;">Action</th> -->
+            <th style="width:150px;">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -243,12 +243,13 @@ while ($subject = $result_subjects->fetch_assoc()) {
                 ?>
 
                 <td class="bg-success text-white">
-                    <?= ($num_subjects > 0) ? round($total_grade / $num_subjects, 2) : 'N/A' ?>
+                    <?= ($num_subjects > 0) ? round($total_grade / $num_subjects) : 'N/A' ?>
                 </td>
 
-                <!-- <td>
-                    <a href="student_grade.php?student_id=<?= $student_id ?>" class="btn btn-primary">View Grades</a>
-                </td> -->
+                <td>
+                    <a href="print.php?student_id=<?= $student_id ?>" target="_blank" class="btn btn-primary">Print Grade</a>
+                </td>
+ 
             </tr>
         <?php endwhile; ?>
     </tbody>
